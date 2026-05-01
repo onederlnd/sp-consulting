@@ -1,0 +1,51 @@
+# =============================================================================
+# CODEOWNERS
+# =============================================================================
+# Maps file patterns to required reviewers.
+# GitHub automatically requests review from the listed owner(s)
+# on any PR that touches matching files.
+#
+# Format:  <pattern>    <@github-username or @org/team>
+# Rules:   Last matching pattern takes precedence.
+#
+# ACTION REQUIRED: Replace @your-github-username with your actual GitHub
+# username before pushing this file.
+# =============================================================================
+
+# --- Default: everything routes to the lead developer ---
+*                               @onederlnd
+
+# --- Application core ---
+app/                            @onederlnd
+config.py                       @onederlnd
+wsgi.py                         @onederlnd
+
+# --- Database migrations (always require lead review) ---
+migrations/                     @onederlnd
+
+# --- CI/CD and infrastructure (always require lead review) ---
+.github/                        @onederlnd
+Dockerfile                      @onederlnd
+docker-compose.yml              @onederlnd
+fly.toml                        @onederlnd
+Makefile                        @onederlnd
+
+# --- Dependencies (security-sensitive, always require lead review) ---
+requirements/                   @onederlnd
+
+# --- Tests ---
+tests/                          @onederlnd
+
+# =============================================================================
+# SCALING GUIDE — add lines like these as your team grows:
+#
+# Frontend developer owns templates and static assets:
+# app/templates/                @frontend-dev-username
+# app/static/                   @frontend-dev-username
+#
+# A whole team owns the client area:
+# app/blueprints/client/        @your-org/client-team
+#
+# Multiple reviewers on sensitive files:
+# migrations/                   @your-github-username @senior-dev-username
+# =============================================================================
