@@ -8,13 +8,13 @@
 ## Phase 0 — Foundation ✅ In Progress
 
 - [x] GitHub repo initialized
-- [ ] Project structure scaffolded (`app/`, `blueprints/`, `templates/`, `static/`)
-- [ ] `config.py` with Dev / Staging / Production configs
-- [ ] `extensions.py` — db, login_manager, csrf, limiter wired up
-- [ ] Docker + `docker-compose.yml` for local dev
-- [ ] `.env.example` documented
-- [ ] `Makefile` commands (`run`, `test`, `lint`, `migrate`, `shell`, `install`)
-- [ ] `requirements/` split — `base.txt`, `dev.txt`, `prod.txt`
+- [x] Project structure scaffolded (`app/`, `routes/`, `templates/`, `static/`)
+- [x] `config.py` with Dev / Staging / Production configs
+- [x] `extensions.py` — db, login_manager, csrf, limiter wired up
+- [x] Docker + `docker-compose.yml` for local dev
+- [x] `.env.example` documented
+- [x] `Makefile` commands (`run`, `test`, `lint`, `migrate`, `shell`, `install`)
+- [x] `requirements/` split — `base.txt`, `dev.txt`, `prod.txt`
 
 ---
 
@@ -22,7 +22,7 @@
 
 - [ ] `User` model with role enum (`admin`, `staff`, `client`)
 - [ ] Flask-Migrate baseline migration
-- [ ] Login / logout routes (`auth` blueprint)
+- [ ] Login / logout routes (`auth` routes)
 - [ ] Password hashing with bcrypt
 - [ ] CSRF protection on all forms (Flask-WTF)
 - [ ] Login rate limiting (Flask-Limiter)

@@ -1,0 +1,63 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+eggs/
+parts/
+var/
+sdist/
+develop-eggs/
+.installed.cfg
+lib/
+lib64/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Environment & secrets
+.env
+.env.*
+!.env.example
+
+# Flask / SQLite
+dev.db
+*.db
+*.sqlite3
+instance/
+
+# Flask-Migrate (keep migrations folder, ignore cache)
+migrations/versions/__pycache__/
+
+# Testing
+.pytest_cache/
+.coverage
+coverage.xml
+htmlcov/
+
+# Ruff / Linting
+.ruff_cache/
+
+# Docker
+*.log
+
+# Fly.io
+.fly/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+*.swo

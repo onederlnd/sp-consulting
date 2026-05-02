@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% block title %}Client Portal — Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+<div class="portal-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <p class="sidebar-label">Portal</p>
+      <a href="{{ url_for('client.dashboard') }}" class="active">Dashboard</a>
+      <a href="{{ url_for('client.documents') }}">Documents</a>
+      <a href="{{ url_for('client.messages') }}">Messages</a>
+      <a href="{{ url_for('client.reports') }}">Reports</a>
+    </div>
+    <div class="sidebar-section" style="margin-top:auto; padding-top:40px;">
+      <a href="{{ url_for('auth.logout') }}" style="color:#555 !important;">Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="portal-content">
+    <div class="portal-header">
+      <h1>Dashboard</h1>
+      <p>Welcome back, {{ current_user.first_name }}. Here's your engagement overview.</p>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="dash-card">
+        <p class="dash-card-label">Active Engagements</p>
+        <p class="dash-card-value">{{ engagement_count | default('—') }}</p>
+        <p class="dash-card-sub">Current projects</p>
+      </div>
+      <div class="dash-card">
+        <p class="dash-card-label">Documents</p>
+        <p class="dash-card-value">{{ document_count | default('—') }}</p>
+        <p class="dash-card-sub">In your portal</p>
+      </div>
+      <div class="dash-card">
+        <p class="dash-card-label">Unread Messages</p>
+        <p class="dash-card-value">{{ message_count | default('0') }}</p>
+        <p class="dash-card-sub">From your team</p>
+      </div>
+    </div>
+
+    <!-- ENGAGEMENTS TABLE -->
+    <div style="margin-bottom: 40px;">
+      <h2 style="font-family: var(--font-display); font-size: 24px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 20px;">Your Engagements</h2>
+      {% if engagements %}
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Engagement</th>
+            <th>Lead Consultant</th>
+            <th>Started</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for eng in engagements %}
+          <tr>
+            <td>{{ eng.name }}</td>
+            <td>{{ eng.consultant }}</td>
+            <td>{{ eng.start_date.strftime('%b %d, %Y') }}</td>
+            <td><span class="badge badge-{{ eng.status_class }}">{{ eng.status }}</span></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p style="color:#555; font-size:0.9rem; padding:24px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">No active engagements found.</p>
+      {% endif %}
+    </div>
+
+    <!-- RECENT DOCUMENTS -->
+    <div>
+      <h2 style="font-family: var(--font-display); font-size: 24px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 20px;">Recent Documents</h2>
+      {% if documents %}
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Uploaded</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for doc in documents %}
+          <tr>
+            <td>{{ doc.name }}</td>
+            <td><span style="font-family:var(--font-mono);font-size:0.75rem;color:#666;">{{ doc.type }}</span></td>
+            <td style="color:#666;">{{ doc.uploaded_at.strftime('%b %d, %Y') }}</td>
+            <td><a href="{{ doc.url }}" style="color:var(--accent);font-size:0.8rem;font-family:var(--font-mono);letter-spacing:0.06em;">Download</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p style="color:#555; font-size:0.9rem; padding:24px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">No documents available yet.</p>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

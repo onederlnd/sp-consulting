@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% block title %}Contact — Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+
+<section class="section" style="padding-top: calc(var(--nav-h) + 80px);">
+  <div class="container">
+    <p class="section-label reveal">Get in Touch</p>
+    <div class="contact-layout" style="margin-top: 48px;">
+
+      <!-- LEFT: INFO -->
+      <div class="contact-info reveal">
+        <h2>Let's Talk<br><span class="accent">Directly.</span></h2>
+        <p>We don't do intake forms with 10-day response times. If you're reaching out, we'll respond within one business day — usually same day.</p>
+
+        <div class="contact-detail">
+          <div class="contact-item">
+            <span class="contact-item-label">Email</span>
+            <span class="contact-item-value">
+              <a href="mailto:hello@suncerayconsulting.com" style="color: var(--accent);">hello@suncerayconsulting.com</a>
+            </span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-item-label">Phone</span>
+            <span class="contact-item-value">+1 (313) 000-0000</span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-item-label">Location</span>
+            <span class="contact-item-value">Detroit, MI<br><span style="color:#666; font-size:0.85rem;">Serving clients nationally &amp; remotely</span></span>
+          </div>
+          <div class="contact-item">
+            <span class="contact-item-label">Hours</span>
+            <span class="contact-item-value">Mon–Fri, 8am–6pm ET</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT: FORM -->
+      <div class="contact-form reveal reveal-delay-2">
+        <h3>Send a Message</h3>
+        <form method="POST" action="{{ url_for('main.contact') }}" novalidate>
+          {{ form.hidden_tag() }}
+
+          <div class="form-row">
+            <div class="form-group">
+              {{ form.first_name.label }}
+              {{ form.first_name(placeholder="Jane") }}
+              {% if form.first_name.errors %}
+                {% for e in form.first_name.errors %}<p style="color:#ff4f4f; font-size:0.75rem; margin-top:4px;">{{ e }}</p>{% endfor %}
+              {% endif %}
+            </div>
+            <div class="form-group">
+              {{ form.last_name.label }}
+              {{ form.last_name(placeholder="Smith") }}
+              {% if form.last_name.errors %}
+                {% for e in form.last_name.errors %}<p style="color:#ff4f4f; font-size:0.75rem; margin-top:4px;">{{ e }}</p>{% endfor %}
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="form-group">
+            {{ form.email.label }}
+            {{ form.email(placeholder="jane@company.com") }}
+            {% if form.email.errors %}
+              {% for e in form.email.errors %}<p style="color:#ff4f4f; font-size:0.75rem; margin-top:4px;">{{ e }}</p>{% endfor %}
+            {% endif %}
+          </div>
+
+          <div class="form-group">
+            {{ form.organization.label }}
+            {{ form.organization(placeholder="Your Company") }}
+          </div>
+
+          <div class="form-group">
+            {{ form.service.label }}
+            {{ form.service() }}
+          </div>
+
+          <div class="form-group">
+            {{ form.message.label }}
+            {{ form.message(placeholder="Tell us about your situation — what's the challenge, what's the context, what would success look like?") }}
+            {% if form.message.errors %}
+              {% for e in form.message.errors %}<p style="color:#ff4f4f; font-size:0.75rem; margin-top:4px;">{{ e }}</p>{% endfor %}
+            {% endif %}
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center; margin-top:8px;">
+            Send Message →
+          </button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+{% endblock %}
