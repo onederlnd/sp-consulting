@@ -1,0 +1,77 @@
+{% extends "portal_base.html" %}
+{% block title %}Messages — Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+{% set active = 'messages' %}
+<div class="portal-layout">
+
+    {% include 'client/_sidebar.html' with context %}
+
+    <div class="portal-content">
+        <div class="portal-header">
+            <h1>Messages</h1>
+            <p>Direct communication with your consulting team.</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div
+            style="padding:12px 16px; margin-bottom:16px; border-left:3px solid {% if category == 'danger' %}#ff4f4f{% elif category == 'success' %}var(--accent){% else %}#888{% endif %}; background:rgba(255,255,255,0.03); font-size:0.875rem;">
+            {{ message }}
+        </div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <div style="max-width:720px;">
+
+            <!-- THREAD -->
+            <div style="margin-bottom:32px;">
+                {% if thread %}
+                {% for msg in thread %}
+                <div
+                    style="margin-bottom:24px; display:flex; flex-direction:column; {% if msg.sender_id == current_user.id %}align-items:flex-end;{% else %}align-items:flex-start;{% endif %}">
+                    <div
+                        style="max-width:80%; padding:16px 20px; background:{% if msg.sender_id == current_user.id %}var(--accent){% else %}rgba(255,255,255,0.05){% endif %}; border:1px solid var(--border); font-size:0.9rem; line-height:1.6; color:{% if msg.sender_id == current_user.id %}#000{% else %}var(--text){% endif %};">
+                        {{ msg.body }}
+                    </div>
+                    <p style="font-size:0.75rem; color:#555; margin-top:6px; font-family:var(--font-mono);">
+                        {{ msg.sender.full_name }} &mdash; {{ msg.sent_at.strftime('%b %d, %Y %I:%M %p') if msg.sent_at
+                        else '—' }}
+                    </p>
+                </div>
+                {% endfor %}
+                {% else %}
+                <div
+                    style="padding:48px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); text-align:center; margin-bottom:32px;">
+                    <p style="color:#555; font-size:0.9rem; margin-bottom:8px;">No messages yet.</p>
+                    <p style="color:#444; font-size:0.8rem;">Send a message below to start a conversation with your
+                        team.</p>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- COMPOSE -->
+            <div style="border-top:1px solid var(--border); padding-top:24px;">
+                <h2
+                    style="font-family:var(--font-display); font-size:18px; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:16px;">
+                    Send a Message</h2>
+                <form method="POST" action="{{ url_for('client.send_message') }}" novalidate>
+                    {{ form.hidden_tag() if form }}
+                    <div class="form-group">
+                        <label
+                            style="font-size:0.8rem; color:#888; letter-spacing:0.06em; text-transform:uppercase;">Message</label>
+                        <textarea name="body" rows="5" placeholder="Write your message here..."
+                            style="width:100%; background:rgba(255,255,255,0.03); border:1px solid var(--border); color:var(--text); padding:12px 16px; font-family:var(--font-sans); font-size:0.9rem; resize:vertical;"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" style="margin-top:8px;">
+                        Send Message →
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+{% endblock %}
