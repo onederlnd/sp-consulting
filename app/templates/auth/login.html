@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% block title %}Client Login — Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+<div class="auth-page">
+  <div class="auth-card">
+    <div class="auth-logo">
+      <span class="logo-mark">SP</span>
+      <span class="logo-text">Sunceray Patterson</span>
+    </div>
+
+    <h1>Sign In</h1>
+    <p class="subtitle">Access your client or staff portal below.</p>
+
+    <form method="POST" action="{{ url_for('auth.login') }}" novalidate>
+      {{ form.hidden_tag() }}
+
+      <div class="form-group">
+        {{ form.email.label }}
+        {{ form.email(placeholder="your@email.com", autocomplete="email") }}
+        {% if form.email.errors %}
+          {% for e in form.email.errors %}<p style="color:#ff4f4f; font-size:0.75rem; margin-top:4px;">{{ e }}</p>{% endfor %}
+        {% endif %}
+      </div>
+
+      <div class="form-group">
+        {{ form.password.label }}
+        {{ form.password(placeholder="••••••••", autocomplete="current-password") }}
+        {% if form.password.errors %}
+          {% for e in form.password.errors %}<p style="color:#ff4f4f; font-size:0.75rem; margin-top:4px;">{{ e }}</p>{% endfor %}
+        {% endif %}
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;">
+        <label style="display:flex; align-items:center; gap:8px; cursor:pointer; font-size:0.85rem; color:#888;">
+          {{ form.remember_me() }}
+          <span>Remember me</span>
+        </label>
+        <a href="{{ url_for('auth.reset_password_request') }}" style="font-size:0.8rem; color:var(--accent);">Forgot password?</a>
+      </div>
+
+      <button type="submit" class="btn btn-primary" style="width:100%; justify-content:center;">
+        Sign In →
+      </button>
+    </form>
+
+    <p class="auth-footer">
+      Don't have an account? <a href="{{ url_for('main.contact') }}">Contact us</a> to get access.
+    </p>
+  </div>
+</div>
+{% endblock %}

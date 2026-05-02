@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+{% block title %}About — Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+
+<section class="page-hero">
+  <div class="container">
+    <div class="page-hero-inner">
+      <div>
+        <p class="section-label">About the Firm</p>
+        <h1 class="reveal">We Work<br><span class="accent">Differently.</span></h1>
+      </div>
+      <p class="reveal reveal-delay-2">
+        Sunceray Patterson Consulting has operated for over a decade at the intersection of business strategy and enterprise technology. We're not a big four firm. We're not a staffing agency. We're a focused team of practitioners who get involved, stay accountable, and don't leave until the work is done.
+      </p>
+    </div>
+
+    <div class="values-grid" style="margin-top: 80px;">
+      <div class="value-card reveal">
+        <h3>Honest Counsel</h3>
+        <p>We tell clients what they need to hear, not what they want to hear. Every engagement starts with a clear-eyed assessment — even when that's uncomfortable.</p>
+      </div>
+      <div class="value-card reveal reveal-delay-1">
+        <h3>Embedded Partnership</h3>
+        <p>We work alongside your team, not above it. Our advisors operate inside the problem, not at arm's length from a slide deck.</p>
+      </div>
+      <div class="value-card reveal reveal-delay-2">
+        <h3>Measurable Outcomes</h3>
+        <p>Every engagement has defined success metrics set at the start. We don't declare victory — results do.</p>
+      </div>
+      <div class="value-card reveal reveal-delay-3">
+        <h3>Long-Term Orientation</h3>
+        <p>We build relationships, not transactions. Most of our clients have worked with us across multiple engagements and years.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="team-section">
+  <div class="container">
+    <p class="section-label reveal">Leadership</p>
+    <h2 class="section-title reveal reveal-delay-1">The Team</h2>
+
+    <div class="bio-block reveal">
+      <div class="bio-photo">SP</div>
+      <div>
+        <h3 class="bio-name">Sunceray Patterson</h3>
+        <p class="bio-title">Founder -  Principal Consultant</p>
+        <p class="bio-text">Sunceray has spent two decades advising organizations — from early-stage companies to Fortune 500 enterprises — on strategy, organizational design, and technology adoption. She founded SPC to deliver the kind of candid, high-impact advisory work that most firms won't touch.</p>
+        <p class="bio-text">Prior to founding the firm, she held senior roles in operations and strategy at two major consulting houses and led transformation programs across the healthcare, finance, and manufacturing sectors.</p>
+      </div>
+    </div>
+
+    <div class="bio-block reveal">
+      <div class="bio-photo" style="font-size:40px;color:rgba(232,255,71,0.1);">—</div>
+      <div>
+        <h3 class="bio-name">Randy Christenhusz</h3>
+        <p class="bio-title">Founder - Technology, Strategy &amp; Marketing</p>
+        <p class="bio-text">Our senior associate team brings specialized depth in enterprise systems architecture, change management, and financial operations. Associates are assigned to engagements based on fit — not availability — so clients always work with the right person for the problem.</p>
+        <p class="bio-text" style="font-family: var(--font-mono); font-size: 0.8rem; color: #555; letter-spacing: 0.04em;">Associate bios available upon request during the engagement scoping process.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <p class="section-label">Work With Us</p>
+    <h2 class="section-title reveal">Ready to Talk?</h2>
+    <p class="reveal reveal-delay-1">Engagements begin with a direct conversation — no proposals, no pitches. Just a focused discussion about your situation.</p>
+    <div class="reveal reveal-delay-2">
+      <a href="{{ url_for('main.contact') }}" class="btn btn-primary">Start a Conversation</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

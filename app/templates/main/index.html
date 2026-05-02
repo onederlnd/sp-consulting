@@ -1,0 +1,166 @@
+{% extends "base.html" %}
+{% block title %}Sunceray Patterson Consulting — Strategy & Technology{% endblock %}
+
+{% block content %}
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-text">SPC</div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Business Strategy &amp; Technology Consulting</p>
+    <h1 class="hero-headline">
+      Built to<br>
+      <em>Perform.</em>
+    </h1>
+    <p class="hero-body">
+      We help organizations operate with precision — aligning strategy, structure, and technology to deliver measurable results. No guesswork. No filler.
+    </p>
+    <div class="hero-actions">
+      <a href="{{ url_for('main.contact') }}" class="btn btn-primary">Start a Conversation</a>
+      <a href="#services" class="btn btn-secondary">Our Services</a>
+    </div>
+  </div>
+
+  <div class="hero-visual">
+    <div class="hero-visual-inner">
+      <div class="hero-stat-block reveal">
+        <span class="stat-num">94<span style="font-size:0.5em; color:#aaa">%</span></span>
+        <span class="stat-label">Client Retention</span>
+      </div>
+      <div class="hero-stat-block reveal reveal-delay-2">
+        <span class="stat-num">12+</span>
+        <span class="stat-label">Years Operating</span>
+      </div>
+      <div class="hero-stat-block reveal reveal-delay-3">
+        <span class="stat-num">$2B+</span>
+        <span class="stat-label">Client Revenue Influenced</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-strip">
+  <div class="marquee-track">
+    {% set items = ['Strategic Planning', 'Technology Roadmaps', 'Operational Efficiency', 'Organizational Design', 'Systems Integration', 'Change Management', 'Digital Transformation', 'Executive Advisory'] %}
+    {% for item in items %}
+      <span class="marquee-item"><span class="dot"></span>{{ item }}</span>
+    {% endfor %}
+    {% for item in items %}
+      <span class="marquee-item"><span class="dot"></span>{{ item }}</span>
+    {% endfor %}
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="section" id="services">
+  <div class="container">
+    <p class="section-label reveal">What We Do</p>
+    <h2 class="section-title reveal reveal-delay-1">Core<br>Services</h2>
+
+    <div class="services-grid">
+      <div class="service-card reveal">
+        <p class="service-num">01</p>
+        <span class="service-icon">◈</span>
+        <h3>Business Strategy</h3>
+        <p>From market positioning to organizational structure, we build strategies that hold up under real-world pressure — not just in boardrooms.</p>
+        <span class="learn-more">Learn More →</span>
+      </div>
+      <div class="service-card reveal reveal-delay-1">
+        <p class="service-num">02</p>
+        <span class="service-icon">⬡</span>
+        <h3>Technology Advisory</h3>
+        <p>We translate business needs into technology decisions — selecting tools, designing systems, and guiding implementation so your stack works for you.</p>
+        <span class="learn-more">Learn More →</span>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <p class="service-num">03</p>
+        <span class="service-icon">◇</span>
+        <h3>Operations & Systems</h3>
+        <p>Inefficiency costs more than you think. We map, optimize, and systematize your operations to free capacity and reduce risk.</p>
+        <span class="learn-more">Learn More →</span>
+      </div>
+      <div class="service-card reveal">
+        <p class="service-num">04</p>
+        <span class="service-icon">△</span>
+        <h3>Executive Advisory</h3>
+        <p>A trusted thought partner for leaders navigating complexity. Direct, honest counsel — not what you want to hear, but what you need to act on.</p>
+        <span class="learn-more">Learn More →</span>
+      </div>
+      <div class="service-card reveal reveal-delay-1">
+        <p class="service-num">05</p>
+        <span class="service-icon">▣</span>
+        <h3>Digital Transformation</h3>
+        <p>We help organizations modernize without chaos — structured transitions that capture value at every phase, not just at the finish line.</p>
+        <span class="learn-more">Learn More →</span>
+      </div>
+      <div class="service-card reveal reveal-delay-2">
+        <p class="service-num">06</p>
+        <span class="service-icon">◉</span>
+        <h3>Change Management</h3>
+        <p>Strategy without adoption is just a document. We design change initiatives that build genuine buy-in at every level of the organization.</p>
+        <span class="learn-more">Learn More →</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROOF BAND -->
+<div class="proof-band">
+  <div class="container">
+    <div class="proof-inner">
+      <div class="proof-stat">
+        <div class="proof-num">150+</div>
+        <div class="proof-label">Engagements Completed</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-num">94%</div>
+        <div class="proof-label">Client Retention Rate</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-num">12</div>
+        <div class="proof-label">Industries Served</div>
+      </div>
+      <div class="proof-stat">
+        <div class="proof-num">$2B+</div>
+        <div class="proof-label">Revenue Influenced</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ABOUT PREVIEW -->
+<section class="section">
+  <div class="container">
+    <div class="about-split">
+      <div class="about-text reveal">
+        <p class="section-label">Who We Are</p>
+        <h2 class="section-title">Direct.<br>Deliberate.<br>Driven.</h2>
+        <p>Sunceray Patterson Consulting was founded on a simple premise: organizations deserve advisors who are as invested in outcomes as they are. We don't do generic frameworks. We do the work.</p>
+        <p>Our team brings deep expertise across strategy, operations, and technology — and we know how to make those three work in concert.</p>
+        <a href="{{ url_for('main.about') }}" class="btn btn-secondary" style="margin-top: 16px;">Meet the Team</a>
+      </div>
+      <div class="about-visual reveal reveal-delay-2">
+        <div class="about-img-frame">
+          <div class="accent-corner"></div>
+        </div>
+        <div class="about-tag">Founded 2012 · Detroit, MI</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="container">
+    <p class="section-label">Ready to Begin?</p>
+    <h2 class="section-title reveal">Let's Build<br><em class="accent">Something Real</em></h2>
+    <p class="reveal reveal-delay-1">No pitch decks. No sales cycle. Just a direct conversation about where you are and where you need to go.</p>
+    <div class="reveal reveal-delay-2">
+      <a href="{{ url_for('main.contact') }}" class="btn btn-primary">Get in Touch</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

@@ -1,0 +1,132 @@
+{% extends "base.html" %}
+{% block title %}Services — Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+
+<section class="page-hero">
+  <div class="container">
+    <div class="page-hero-inner">
+      <div>
+        <p class="section-label">What We Do</p>
+        <h1 class="reveal">Our<br><span class="accent">Services</span></h1>
+      </div>
+      <p class="reveal reveal-delay-2">
+        Every engagement is scoped to the problem — not a packaged methodology. Below are the practice areas we operate within. Most engagements draw across several.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container">
+    <div class="services-page-grid">
+
+      <div class="service-page-card reveal">
+        <span class="num">01</span>
+        <h3>Business Strategy</h3>
+        <p class="desc">We work with leadership teams to develop strategies grounded in market reality — not aspirational frameworks. This includes competitive positioning, growth planning, portfolio rationalization, and governance design.</p>
+        <div class="tag-list">
+          <span class="tag">Market Analysis</span>
+          <span class="tag">Growth Strategy</span>
+          <span class="tag">Portfolio Review</span>
+          <span class="tag">Board Advisory</span>
+        </div>
+      </div>
+
+      <div class="service-page-card reveal reveal-delay-1">
+        <span class="num">02</span>
+        <h3>Technology Advisory</h3>
+        <p class="desc">From ERP selection to cloud migration to custom platform architecture, we help organizations make sound technology decisions — and implement them with minimal disruption to the business.</p>
+        <div class="tag-list">
+          <span class="tag">Systems Architecture</span>
+          <span class="tag">Vendor Selection</span>
+          <span class="tag">Cloud Strategy</span>
+          <span class="tag">IT Governance</span>
+        </div>
+      </div>
+
+      <div class="service-page-card reveal">
+        <span class="num">03</span>
+        <h3>Operations & Process</h3>
+        <p class="desc">We map how work actually flows through your organization, identify where value is leaking, and design operational systems that scale. This is detailed, unglamorous, and high-leverage work.</p>
+        <div class="tag-list">
+          <span class="tag">Process Mapping</span>
+          <span class="tag">Workflow Design</span>
+          <span class="tag">KPI Frameworks</span>
+          <span class="tag">Cost Optimization</span>
+        </div>
+      </div>
+
+      <div class="service-page-card reveal reveal-delay-1">
+        <span class="num">04</span>
+        <h3>Executive Advisory</h3>
+        <p class="desc">A trusted, confidential resource for senior leaders who need a thought partner with no organizational agenda. We engage directly with C-suite and senior management on the most complex and sensitive challenges.</p>
+        <div class="tag-list">
+          <span class="tag">CEO Advisory</span>
+          <span class="tag">Decision Support</span>
+          <span class="tag">Crisis Navigation</span>
+          <span class="tag">Succession Planning</span>
+        </div>
+      </div>
+
+      <div class="service-page-card reveal">
+        <span class="num">05</span>
+        <h3>Digital Transformation</h3>
+        <p class="desc">We design and manage technology-led transformation programs that deliver value incrementally — not as a multi-year moonshot with a single delivery date. Phased, pragmatic, and built around your team's capacity.</p>
+        <div class="tag-list">
+          <span class="tag">Program Design</span>
+          <span class="tag">Change Readiness</span>
+          <span class="tag">Roadmapping</span>
+          <span class="tag">Implementation Support</span>
+        </div>
+      </div>
+
+      <div class="service-page-card reveal reveal-delay-1">
+        <span class="num">06</span>
+        <h3>Change Management</h3>
+        <p class="desc">Technical change without human adoption fails every time. We design change management programs that address the real blockers — not just communication plans and training checkboxes.</p>
+        <div class="tag-list">
+          <span class="tag">Stakeholder Analysis</span>
+          <span class="tag">Adoption Strategy</span>
+          <span class="tag">Leadership Alignment</span>
+          <span class="tag">Culture Change</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ENGAGEMENT MODEL -->
+<section class="section" style="background: var(--off-black); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <p class="section-label reveal">How We Work</p>
+    <h2 class="section-title reveal reveal-delay-1">Engagement<br>Model</h2>
+    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-top: 0;">
+      {% for step in [
+        ('Scoping Call', 'A direct conversation to understand your situation. No proposal required. We determine together whether there\'s a fit and what the engagement should look like.'),
+        ('Engagement Design', 'We define the scope, deliverables, timeline, and success metrics together — before any work begins. No scope creep, no surprises.'),
+        ('Embedded Execution', 'Our team works inside your organization for the duration of the engagement. We attend the meetings, review the data, and stay until the work is real.')
+      ] %}
+      <div class="reveal reveal-delay-{{ loop.index0 }}">
+        <p style="font-family: var(--font-mono); font-size: 0.7rem; letter-spacing: 0.1em; color: var(--accent); margin-bottom: 12px;">0{{ loop.index }}</p>
+        <h3 style="font-family: var(--font-display); font-size: 26px; text-transform: uppercase; margin-bottom: 12px;">{{ step[0] }}</h3>
+        <p style="color: #888; font-size: 0.9rem; line-height: 1.7;">{{ step[1] }}</p>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</section>
+
+<section class="cta-section">
+  <div class="container">
+    <p class="section-label">Next Step</p>
+    <h2 class="section-title reveal">Start with a<br><em class="accent">Conversation</em></h2>
+    <p class="reveal reveal-delay-1">Tell us what you're working through. We'll tell you honestly whether we can help.</p>
+    <div class="reveal reveal-delay-2">
+      <a href="{{ url_for('main.contact') }}" class="btn btn-primary">Contact Us</a>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

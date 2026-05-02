@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% block title %}Staff Portal — Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+<div class="portal-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">
+      <p class="sidebar-label">Staff</p>
+      <a href="{{ url_for('staff.index') }}" class="active">Overview</a>
+      <a href="{{ url_for('staff.clients') }}">Clients</a>
+      <a href="{{ url_for('staff.engagements') }}">Engagements</a>
+      <a href="{{ url_for('staff.documents') }}">Documents</a>
+    </div>
+    {% if current_user.role == 'admin' %}
+    <div class="sidebar-section">
+      <p class="sidebar-label">Admin</p>
+      <a href="{{ url_for('staff.users') }}">User Management</a>
+      <a href="{{ url_for('staff.settings') }}">Settings</a>
+    </div>
+    {% endif %}
+    <div class="sidebar-section">
+      <a href="{{ url_for('auth.logout') }}" style="color:#555 !important;">Sign Out</a>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <div class="portal-content">
+    <div class="portal-header">
+      <h1>Staff Overview</h1>
+      <p>{{ current_user.first_name }} {{ current_user.last_name }} &mdash; <span style="color:var(--accent); font-family:var(--font-mono); font-size:0.8rem; letter-spacing:0.06em; text-transform:uppercase;">{{ current_user.role }}</span></p>
+    </div>
+
+    <div class="dashboard-grid">
+      <div class="dash-card">
+        <p class="dash-card-label">Active Clients</p>
+        <p class="dash-card-value">{{ client_count | default('—') }}</p>
+        <p class="dash-card-sub">Assigned to you</p>
+      </div>
+      <div class="dash-card">
+        <p class="dash-card-label">Open Engagements</p>
+        <p class="dash-card-value">{{ engagement_count | default('—') }}</p>
+        <p class="dash-card-sub">Across all clients</p>
+      </div>
+      <div class="dash-card">
+        <p class="dash-card-label">Pending Items</p>
+        <p class="dash-card-value">{{ pending_count | default('0') }}</p>
+        <p class="dash-card-sub">Requiring attention</p>
+      </div>
+    </div>
+
+    <!-- CLIENT LIST -->
+    <div style="margin-bottom: 40px;">
+      <h2 style="font-family: var(--font-display); font-size: 24px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 20px;">Assigned Clients</h2>
+      {% if clients %}
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Client</th>
+            <th>Organization</th>
+            <th>Engagement</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for client in clients %}
+          <tr>
+            <td>{{ client.user.full_name }}</td>
+            <td style="color:#777;">{{ client.organization }}</td>
+            <td>{{ client.engagement_name }}</td>
+            <td><span class="badge badge-{{ client.status_class }}">{{ client.status }}</span></td>
+            <td><a href="{{ url_for('staff.client_detail', client_id=client.id) }}" style="color:var(--accent);font-size:0.8rem;font-family:var(--font-mono);letter-spacing:0.06em;">View →</a></td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p style="color:#555; font-size:0.9rem; padding:24px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">No clients assigned yet.</p>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}
