@@ -1,0 +1,19 @@
+<aside class="sidebar">
+  <div class="sidebar-section">
+    <p class="sidebar-label">Staff</p>
+    <a href="{{ url_for('staff.index') }}" {% if active == 'index' %}class="active"{% endif %}>Overview</a>
+    <a href="{{ url_for('staff.clients') }}" {% if active == 'clients' %}class="active"{% endif %}>Clients</a>
+    <a href="{{ url_for('staff.engagements') }}" {% if active == 'engagements' %}class="active"{% endif %}>Engagements</a>
+    <a href="{{ url_for('staff.documents') }}" {% if active == 'documents' %}class="active"{% endif %}>Documents</a>
+  </div>
+  {% if current_user.role == 'admin' %}
+  <div class="sidebar-section">
+    <p class="sidebar-label">Admin</p>
+    <a href="{{ url_for('staff.users') }}" {% if active == 'users' %}class="active"{% endif %}>User Management</a>
+    <a href="{{ url_for('staff.settings') }}" {% if active == 'settings' %}class="active"{% endif %}>Settings</a>
+  </div>
+  {% endif %}
+  <div class="sidebar-section">
+    <a href="{{ url_for('auth.logout') }}" style="color:#555 !important;">Sign Out</a>
+  </div>
+</aside>

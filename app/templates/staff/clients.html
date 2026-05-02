@@ -1,0 +1,87 @@
+{% extends "portal_base.html" %}
+{% block title %}Clients — Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+{% set active = 'clients' %}
+<div class="portal-layout">
+
+  {% include 'staff/_sidebar.html' with context %}
+
+  <div class="portal-content">
+    <div class="portal-header" style="display:flex; justify-content:space-between; align-items:flex-start;">
+      <div>
+        <h1>Clients</h1>
+        <p>
+          {% if current_user.role == 'admin' %}
+            All active clients across the firm.
+          {% else %}
+            Clients assigned to you.
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div style="padding:12px 16px; margin-bottom:16px; border-left:3px solid {% if category == 'danger' %}#ff4f4f{% elif category == 'success' %}var(--accent){% else %}#888{% endif %}; background:rgba(255,255,255,0.03); font-size:0.875rem;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% if clients %}
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Email</th>
+          <th>Status</th>
+          <th>Assigned Staff</th>
+          <th>Joined</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for client in clients %}
+        <tr>
+          <td>{{ client.full_name }}</td>
+          <td style="color:#777; font-family:var(--font-mono); font-size:0.8rem;">
+            {{ client.email }}
+          </td>
+          <td>
+            {% if client.is_active %}
+              <span style="color:#4caf7d; font-size:0.75rem; font-family:var(--font-mono); letter-spacing:0.06em;">ACTIVE</span>
+            {% else %}
+              <span style="color:#ff4f4f; font-size:0.75rem; font-family:var(--font-mono); letter-spacing:0.06em;">INACTIVE</span>
+            {% endif %}
+          </td>
+          <td style="font-size:0.85rem; color:#777;">
+            {% if client.assigned_staff %}
+              {{ client.assigned_staff | map(attribute='full_name') | join(', ') }}
+            {% else %}
+              <span style="color:#444;">Unassigned</span>
+            {% endif %}
+          </td>
+          <td style="color:#555; font-size:0.8rem;">
+            {{ client.created_at.strftime('%b %d, %Y') if client.created_at else '—' }}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div style="padding:48px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); text-align:center;">
+      <p style="color:#555; font-size:0.9rem; margin-bottom:8px;">
+        {% if current_user.role == 'admin' %}
+          No clients in the system yet.
+        {% else %}
+          No clients assigned to you yet.
+        {% endif %}
+      </p>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}

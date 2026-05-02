@@ -1,24 +1,12 @@
-{% extends "base.html" %}
+{% extends "portal_base.html" %}
 {% block title %}Client Portal — Sunceray Patterson Consulting{% endblock %}
 
 {% block content %}
+{% set active = 'index' %}
 <div class="portal-layout">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-section">
-      <p class="sidebar-label">Portal</p>
-      <a href="{{ url_for('client.dashboard') }}" class="active">Dashboard</a>
-      <a href="{{ url_for('client.documents') }}">Documents</a>
-      <a href="{{ url_for('client.messages') }}">Messages</a>
-      <a href="{{ url_for('client.reports') }}">Reports</a>
-    </div>
-    <div class="sidebar-section" style="margin-top:auto; padding-top:40px;">
-      <a href="{{ url_for('auth.logout') }}" style="color:#555 !important;">Sign Out</a>
-    </div>
-  </aside>
+  {% include 'client/_sidebar.html' with context %}
 
-  <!-- MAIN -->
   <div class="portal-content">
     <div class="portal-header">
       <h1>Dashboard</h1>
@@ -43,7 +31,6 @@
       </div>
     </div>
 
-    <!-- ENGAGEMENTS TABLE -->
     <div style="margin-bottom: 40px;">
       <h2 style="font-family: var(--font-display); font-size: 24px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 20px;">Your Engagements</h2>
       {% if engagements %}
@@ -72,7 +59,6 @@
       {% endif %}
     </div>
 
-    <!-- RECENT DOCUMENTS -->
     <div>
       <h2 style="font-family: var(--font-display); font-size: 24px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 20px;">Recent Documents</h2>
       {% if documents %}

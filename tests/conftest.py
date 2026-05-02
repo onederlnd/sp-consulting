@@ -35,12 +35,12 @@ def db(app):
 
 @pytest.fixture(autouse=True)
 def clean_db(db):
-    """Delete all rows between tests. No app param — context already active."""
     yield
-    for table in reversed(db.metadata.sorted_tables):
-        db.session.execute(table.delete())
-    db.session.commit()
-    db.session.remove()
+    db.session.close()
+    with db.engine.connect() as conn:
+        for table in reversed(db.metadata.sorted_tables):
+            conn.execute(table.delete())
+        conn.commit()
 
 
 @pytest.fixture()
@@ -123,10 +123,7 @@ def admin_client(client, admin_user):
 
 @pytest.fixture()
 def staff_client(client, staff_user):
-    response = login(client, "staff@test.com", "password123")
-    # login(client, "staff@test.com", "password123")
-    print(f"\n[DEBUG] login status: {response.status_code}")
-    print(f"\n[DEBUG] login data snippet: {response.data[1400:1600]}")
+    login(client, "staff@test.com", "password123")
     yield client
     logout(client)
 
@@ -182,9 +179,9 @@ def assert_redirect(response, to=None):
         302,
     ), f"Expected redirect, got {response.status_code}"
     if to:
-        assert (
-            to in response.headers["Location"]
-        ), f"Expected redirect to '{to}', got '{response.headers['Location']}'"
+        assert to in response.headers["Location"], (
+            f"Expected redirect to '{to}', got '{response.headers['Location']}'"
+        )
 
 
 def assert_forbidden(response):

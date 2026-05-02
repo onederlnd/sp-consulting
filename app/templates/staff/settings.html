@@ -1,0 +1,23 @@
+{% extends "portal_base.html" %}
+{% block title %}Settings — Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+{% set active = 'settings' %}
+<div class="portal-layout">
+
+  {% include 'staff/_sidebar.html' with context %}
+
+  <div class="portal-content">
+    <div class="portal-header">
+      <h1>Settings</h1>
+      <p>Manage your personal preferences and system configuration.</p>
+    </div>
+
+    <div style="padding:48px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); text-align:center;">
+      <p style="color:#555; font-size:0.9rem; margin-bottom:8px;">Settings coming soon.</p>
+      <p style="color:#444; font-size:0.8rem;">This section is under construction.</p>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

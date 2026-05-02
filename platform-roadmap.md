@@ -20,16 +20,16 @@
 
 ## Phase 1 — Auth & User Management
 
-- [ ] `User` model with role enum (`admin`, `staff`, `client`)
-- [ ] Flask-Migrate baseline migration
-- [ ] Login / logout routes (`auth` routes)
-- [ ] Password hashing with bcrypt
-- [ ] CSRF protection on all forms (Flask-WTF)
-- [ ] Login rate limiting (Flask-Limiter)
-- [ ] Role-based decorators: `@admin_required`, `@staff_required`, `@client_required`
+- [x] `User` model with role enum (`admin`, `staff`, `client`)
+- [x] Flask-Migrate baseline migration
+- [x] Login / logout routes (`auth` routes)
+- [x] Password hashing with bcrypt
+- [x] CSRF protection on all forms (Flask-WTF)
+- [x] Login rate limiting (Flask-Limiter)
+- [x] Role-based decorators: `@admin_required`, `@staff_required`, `@client_required`
 - [ ] Admin-only user creation (no self-registration)
 - [ ] Password reset flow (email token)
-- [ ] `base.html` template with nav and flash messages
+- [x] `base.html` template with nav and flash messages
 
 ---
 

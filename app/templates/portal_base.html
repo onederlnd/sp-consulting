@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block nav %}
+  <header class="site-nav" id="site-nav">
+    <div class="nav-inner">
+      <a href="{{ url_for('main.index') }}" class="nav-logo">
+        <span class="logo-mark">SP</span>
+        <span class="logo-text">Sunceray Patterson</span>
+      </a>
+      <nav class="nav-links" id="nav-links">
+        <a href="{{ url_for('auth.logout') }}" class="nav-cta">Logout →</a>
+      </nav>
+      <button class="nav-burger" id="nav-burger" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
+  {% endblock %}
+{% block footer %}{% endblock %}

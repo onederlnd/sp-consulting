@@ -1,7 +1,7 @@
 .PHONY: run test lint security migrate shell install
 
 run:
-	flask --app wsgi run --debug
+	flask run
 
 test:
 	pytest tests/ --cov=app --cov-report=term-missing
@@ -21,3 +21,9 @@ shell:
 
 install:
 	pip install -r requirements/dev.txt
+
+seed:
+	flask --app wsgi seed
+
+create-user:
+	flask --app wsgi create-user

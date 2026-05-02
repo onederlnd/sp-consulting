@@ -1,0 +1,88 @@
+{% extends "portal_base.html" %}
+{% block title %}Add User — Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+{% set active = 'users' %}
+<div class="portal-layout">
+
+  {% include 'staff/_sidebar.html' with context %}
+
+  <div class="portal-content">
+    <div class="portal-header">
+      <h1>Add User</h1>
+      <p>Create a new client, staff, or admin account.</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div style="padding:12px 16px; margin-bottom:16px; border-left:3px solid {% if category == 'danger' %}#ff4f4f{% elif category == 'success' %}var(--accent){% else %}#888{% endif %}; background:rgba(255,255,255,0.03); font-size:0.875rem;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div style="max-width: 560px;">
+      <form method="POST" action="{{ url_for('staff.create_user') }}" novalidate>
+        {{ form.hidden_tag() }}
+
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+          <div class="form-group">
+            {{ form.first_name.label }}
+            {{ form.first_name(placeholder="First") }}
+            {% if form.first_name.errors %}
+              {% for e in form.first_name.errors %}<p style="color:#ff4f4f; font-size:0.75rem; margin-top:4px;">{{ e }}</p>{% endfor %}
+            {% endif %}
+          </div>
+          <div class="form-group">
+            {{ form.last_name.label }}
+            {{ form.last_name(placeholder="Last") }}
+            {% if form.last_name.errors %}
+              {% for e in form.last_name.errors %}<p style="color:#ff4f4f; font-size:0.75rem; margin-top:4px;">{{ e }}</p>{% endfor %}
+            {% endif %}
+          </div>
+        </div>
+
+        <div class="form-group">
+          {{ form.email.label }}
+          {{ form.email(placeholder="user@example.com", autocomplete="off") }}
+          {% if form.email.errors %}
+            {% for e in form.email.errors %}<p style="color:#ff4f4f; font-size:0.75rem; margin-top:4px;">{{ e }}</p>{% endfor %}
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          {{ form.role.label }}
+          {{ form.role() }}
+          {% if form.role.errors %}
+            {% for e in form.role.errors %}<p style="color:#ff4f4f; font-size:0.75rem; margin-top:4px;">{{ e }}</p>{% endfor %}
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          {{ form.password.label }}
+          {{ form.password(placeholder="••••••••", autocomplete="new-password") }}
+          {% if form.password.errors %}
+            {% for e in form.password.errors %}<p style="color:#ff4f4f; font-size:0.75rem; margin-top:4px;">{{ e }}</p>{% endfor %}
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          {{ form.confirm.label }}
+          {{ form.confirm(placeholder="••••••••", autocomplete="new-password") }}
+          {% if form.confirm.errors %}
+            {% for e in form.confirm.errors %}<p style="color:#ff4f4f; font-size:0.75rem; margin-top:4px;">{{ e }}</p>{% endfor %}
+          {% endif %}
+        </div>
+
+        <div style="display:flex; gap:12px; margin-top:32px;">
+          <button type="submit" class="btn btn-primary">Create User →</button>
+          <a href="{{ url_for('staff.users') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
