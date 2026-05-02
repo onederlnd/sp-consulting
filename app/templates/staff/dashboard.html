@@ -1,31 +1,11 @@
-{% extends "base.html" %}
+{% extends "portal_base.html" %}
 {% block title %}Staff Portal — Sunceray Patterson Consulting{% endblock %}
 
 {% block content %}
 <div class="portal-layout">
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-section">
-      <p class="sidebar-label">Staff</p>
-      <a href="{{ url_for('staff.index') }}" class="active">Overview</a>
-      <a href="{{ url_for('staff.clients') }}">Clients</a>
-      <a href="{{ url_for('staff.engagements') }}">Engagements</a>
-      <a href="{{ url_for('staff.documents') }}">Documents</a>
-    </div>
-    {% if current_user.role == 'admin' %}
-    <div class="sidebar-section">
-      <p class="sidebar-label">Admin</p>
-      <a href="{{ url_for('staff.users') }}">User Management</a>
-      <a href="{{ url_for('staff.settings') }}">Settings</a>
-    </div>
-    {% endif %}
-    <div class="sidebar-section">
-      <a href="{{ url_for('auth.logout') }}" style="color:#555 !important;">Sign Out</a>
-    </div>
-  </aside>
+  {% include 'staff/_sidebar.html' with context %}
 
-  <!-- MAIN -->
   <div class="portal-content">
     <div class="portal-header">
       <h1>Staff Overview</h1>
@@ -50,7 +30,6 @@
       </div>
     </div>
 
-    <!-- CLIENT LIST -->
     <div style="margin-bottom: 40px;">
       <h2 style="font-family: var(--font-display); font-size: 24px; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 20px;">Assigned Clients</h2>
       {% if clients %}

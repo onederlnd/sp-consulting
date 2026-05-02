@@ -19,7 +19,9 @@ import bcrypt  # noqa: F401
 @limiter.limit("10 per minute")
 def login():
     if current_user.is_authenticated:
-        return redirect(url_for("main.index"))
+        if current_user.role in ("admin", "staff"):
+            return redirect(url_for("staff.index"))
+        return redirect(url_for("client.index"))
 
     form = make_login_form()
 
@@ -28,6 +30,10 @@ def login():
         if user and user.is_active and check_password(user, form.password.data):
             login_user(user, remember=form.remember_me.data)
             next_page = request.args.get("next")
+            if next_page:
+                return redirect(next_page)
+            if user.role in ("admin", "staff"):
+                return redirect(url_for("staff.index"))
             return redirect(next_page or url_for("main.index"))
         flash("Invalid email or password.", "danger")
 

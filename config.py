@@ -11,6 +11,16 @@ class BaseConfig:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WTF_CSRF_ENABLED = True
 
+    # Mail
+    MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
+    MAIL_PORT = int(os.environ.get("MAIL_PORT", 587))
+    MAIL_USE_TLS = True
+    MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
+    MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
+    MAIL_DEFAULT_SENDER = os.environ.get(
+        "MAIL_DEFAULT_SENDER", "noreply@sunceraypatterson.com"
+    )
+
 
 class DevelopmentConfig(BaseConfig):
     DEBUG = True
@@ -22,6 +32,7 @@ class DevelopmentConfig(BaseConfig):
 class StagingConfig(BaseConfig):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
+    MAIL_SUPRESS_SEND = True
 
 
 class TestingConfig(BaseConfig):
@@ -33,6 +44,7 @@ class TestingConfig(BaseConfig):
     LOGIN_DISABLED = False
     SERVER_NAME = None
     RATELIMIT_ENABLED = False
+    MAIL_SUPPRESS_SEND = True
 
 
 class ProductionConfig(BaseConfig):
