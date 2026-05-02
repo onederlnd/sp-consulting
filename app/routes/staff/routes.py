@@ -16,10 +16,10 @@ def index():
 @staff_bp.route("/clients")
 @staff_required
 def clients():
-    if current_user.role in ("admin", "staff"):
-        all_clients = User.query.filter_by(role='client').order_by(User.last_name).all()
+    if current_user.role == "admin":
+        all_clients = User.query.filter_by(role="client").order_by(User.last_name).all()
     else:
-        all_clients = current_user.assign_clients
+        all_clients = current_user.assigned_clients
     return render_template("staff/clients.html", clients=all_clients)
 
 
@@ -30,7 +30,7 @@ def engagements():
 
 
 @staff_bp.route("/settings")
-@staff_required
+@admin_required
 def settings():
     return render_template("staff/settings.html")
 
@@ -53,7 +53,7 @@ def users():
 def create_user():
     form = make_create_user_form()
     if form.validate_on_submit():
-        existing = User.query.filter_by(email=form.email.data.lower())
+        existing = User.query.filter_by(email=form.email.data.lower()).first()
         if existing:
             flash("A user with that email already exists.", "danger")
             return render_template("staff/create_user.html", form=form)
