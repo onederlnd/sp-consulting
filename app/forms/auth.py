@@ -1,5 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
+from wtforms import (
+    StringField,
+    PasswordField,
+    BooleanField,
+    SubmitField,
+    SelectField,
+    TextAreaField,
+)
 from wtforms.validators import DataRequired, Email, EqualTo, Length
 
 
@@ -63,3 +70,32 @@ def make_create_user_form():
         submit = SubmitField("Create User")
 
     return CreateUserForm()
+
+
+def make_contact_form():
+    class ContactForm(FlaskForm):
+        first_name = StringField(
+            "First Name", validators=[DataRequired(), Length(max=100)]
+        )
+        last_name = StringField(
+            "Last Name", validators=[DataRequired(), Length(max=100)]
+        )
+        email = StringField("Email", validators=[DataRequired(), Email()])
+        organization = StringField("Organization", validators=[Length(max=255)])
+        service = SelectField(
+            "Service",
+            choices=[
+                ("", "Select a service..."),
+                ("strategy", "Business Strategy"),
+                ("technology", "Technology Advisory"),
+                ("operations", "Operations & Systems"),
+                ("executive", "Executive Advisory"),
+                ("transformation", "Digital Transformation"),
+                ("change", "Change Management"),
+                ("other", "Other"),
+            ],
+        )
+        message = TextAreaField("Message", validators=[DataRequired()])
+        submit = SubmitField("Send Message →")
+
+    return ContactForm()

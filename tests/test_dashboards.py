@@ -332,20 +332,38 @@ def test_admin_sees_all_clients(admin_client, db):
     assert b"Bob" in response.data
 
 
+# FILE: tests/test_dashboards.py
+# REPLACE test_staff_sees_only_assigned_clients with this:
+
+
 def test_staff_sees_only_assigned_clients(client, db, app):
+    from app.models.organization import Organization, OrganizationUser
+
     staff = make_user(db, "mystaff@test.com", "password123", "My", "Staff", "staff")
     assigned = make_user(
         db, "assigned@test.com", "password123", "Assigned", "Client", "client"
     )
     make_user(db, "other@test.com", "password123", "Other", "Client", "client")
 
-    with app.app_context():
-        from app.models.user import User
+    org = Organization(
+        name="Assigned Co",
+        slug="assigned-co",
+        billing_email="assigned@test.com",
+        is_active=True,
+    )
+    db.session.add(org)
+    db.session.flush()
 
-        s = db.session.get(User, staff.id)
-        c = db.session.get(User, assigned.id)
-        s.assigned_clients.append(c)
-        db.session.commit()
+    membership = OrganizationUser(
+        user_id=assigned.id,
+        org_id=org.id,
+        org_role="owner",
+    )
+    db.session.add(membership)
+
+    s = db.session.get(staff.__class__, staff.id)
+    s.assigned_orgs.append(org)
+    db.session.commit()
 
     with app.test_client() as c:
         login(c, "mystaff@test.com", "password123")

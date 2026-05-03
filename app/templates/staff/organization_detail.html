@@ -1,0 +1,152 @@
+{% extends "portal_base.html" %}
+{% block title %}{{ org.name }} — Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+{% set active = 'organizations' %}
+<div class="portal-layout">
+
+  {% include 'staff/_sidebar.html' with context %}
+
+  <div class="portal-content">
+    <div class="portal-header" style="display:flex; justify-content:space-between; align-items:flex-start;">
+      <div>
+        <h1>{{ org.name }}</h1>
+        <p style="font-family:var(--font-mono); font-size:0.8rem; color:#555;">
+          {{ org.slug }} &mdash;
+          {% if org.is_active %}
+            <span style="color:#4caf7d;">ACTIVE</span>
+          {% else %}
+            <span style="color:#ff4f4f;">INACTIVE</span>
+          {% endif %}
+        </p>
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div style="padding:12px 16px; margin-bottom:16px; border-left:3px solid {% if category == 'danger' %}#ff4f4f{% elif category == 'success' %}var(--accent){% else %}#888{% endif %}; background:rgba(255,255,255,0.03); font-size:0.875rem;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- ORG DETAILS -->
+    <div class="dashboard-grid" style="margin-bottom:40px;">
+      <div class="dash-card">
+        <p class="dash-card-label">Billing Email</p>
+        <p style="font-family:var(--font-mono); font-size:0.85rem; color:var(--text); margin-top:8px;">
+          {{ org.billing_email }}
+        </p>
+      </div>
+      <div class="dash-card">
+        <p class="dash-card-label">Members</p>
+        <p class="dash-card-value">{{ org.member_count }}</p>
+        <p class="dash-card-sub">of 3 allowed</p>
+      </div>
+      <div class="dash-card">
+        <p class="dash-card-label">Created</p>
+        <p style="font-family:var(--font-mono); font-size:0.85rem; color:var(--text); margin-top:8px;">
+          {{ org.created_at.strftime('%b %d, %Y') if org.created_at else '—' }}
+        </p>
+      </div>
+    </div>
+
+    <!-- MEMBERS -->
+    <div style="margin-bottom:40px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+        <h2 style="font-family:var(--font-display); font-size:24px; text-transform:uppercase; letter-spacing:0.04em;">
+          Members
+        </h2>
+        {% if org.member_count < 3 and current_user.role == 'admin' %}
+        <a href="#" class="btn btn-primary" style="opacity:0.4; cursor:not-allowed;">
+          Add Member →
+        </a>
+        {% endif %}
+      </div>
+
+      {% if org.members %}
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Joined</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for membership in org.members %}
+          <tr>
+            <td>{{ membership.user.full_name }}</td>
+            <td style="color:#777; font-family:var(--font-mono); font-size:0.8rem;">
+              {{ membership.user.email }}
+            </td>
+            <td>
+              <span style="color:var(--accent); font-family:var(--font-mono); font-size:0.75rem; letter-spacing:0.06em; text-transform:uppercase;">
+                {{ membership.org_role }}
+              </span>
+            </td>
+            <td>
+              {% if membership.user.is_active %}
+                <span style="color:#4caf7d; font-size:0.75rem; font-family:var(--font-mono); letter-spacing:0.06em;">ACTIVE</span>
+              {% else %}
+                <span style="color:#ff4f4f; font-size:0.75rem; font-family:var(--font-mono); letter-spacing:0.06em;">INACTIVE</span>
+              {% endif %}
+            </td>
+            <td style="color:#555; font-size:0.8rem;">
+              {{ membership.created_at.strftime('%b %d, %Y') if membership.created_at else '—' }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p style="color:#555; font-size:0.9rem; padding:24px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+        No members yet.
+      </p>
+      {% endif %}
+    </div>
+
+    <!-- ASSIGNED STAFF -->
+    <div>
+      <h2 style="font-family:var(--font-display); font-size:24px; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:20px;">
+        Assigned Staff
+      </h2>
+      {% if org.assigned_staff %}
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Role</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for staff in org.assigned_staff %}
+          <tr>
+            <td>{{ staff.full_name }}</td>
+            <td style="color:#777; font-family:var(--font-mono); font-size:0.8rem;">
+              {{ staff.email }}
+            </td>
+            <td>
+              <span style="color:var(--accent); font-family:var(--font-mono); font-size:0.75rem; letter-spacing:0.06em; text-transform:uppercase;">
+                {{ staff.role }}
+              </span>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p style="color:#555; font-size:0.9rem; padding:24px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border);">
+        No staff assigned yet.
+      </p>
+      {% endif %}
+    </div>
+
+  </div>
+</div>
+{% endblock %}

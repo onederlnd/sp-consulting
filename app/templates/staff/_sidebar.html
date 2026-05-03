@@ -2,7 +2,7 @@
   <div class="sidebar-section">
     <p class="sidebar-label">Staff</p>
     <a href="{{ url_for('staff.index') }}" {% if active == 'index' %}class="active"{% endif %}>Overview</a>
-    <a href="{{ url_for('staff.clients') }}" {% if active == 'clients' %}class="active"{% endif %}>Clients</a>
+    <a href="{{ url_for('staff.organizations') }}" {% if active == 'organizations' %}class="active"{% endif %}>Organizations</a>
     <a href="{{ url_for('staff.engagements') }}" {% if active == 'engagements' %}class="active"{% endif %}>Engagements</a>
     <a href="{{ url_for('staff.documents') }}" {% if active == 'documents' %}class="active"{% endif %}>Documents</a>
   </div>

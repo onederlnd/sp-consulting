@@ -1,0 +1,11 @@
+Hi {{ user.first_name }},
+
+You've been invited to access the {{ org.name }} client portal at Sunceray Patterson Consulting.
+
+Click the link below to set your password and activate your account. This link expires in 24 hours.
+
+{{ invite_url }}
+
+If you were not expecting this invitation, you can safely ignore this email.
+
+— Sunceray Patterson Consulting
