@@ -1,0 +1,12 @@
+New contact form submission from the Sunceray Patterson Consulting website.
+
+Name: {{ data.first_name }} {{ data.last_name }}
+Email: {{ data.email }}
+Organization: {{ data.organization or '—' }}
+Service Interest: {{ data.service or '—' }}
+
+Message:
+{{ data.message }}
+
+---
+Reply directly to this email to respond to {{ data.first_name }}.

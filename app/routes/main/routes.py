@@ -1,6 +1,7 @@
 from flask import render_template, redirect, url_for, flash
 from app.routes.main import main_bp
 from app.forms.auth import make_contact_form
+from app.utils.email import send_contact_email
 
 
 @main_bp.route("/")
@@ -17,7 +18,16 @@ def about():
 def contact():
     form = make_contact_form()
     if form.validate_on_submit():
-        # TODO: send email with contact form data
+        send_contact_email(
+            {
+                "first_name": form.first_name.data,
+                "last_name": form.last_name.data,
+                "email": form.email.data,
+                "organization": form.organization.data,
+                "service": form.service.data,
+                "message": form.message.data,
+            }
+        )
         flash("Your message has been sent. We'll be in touch shortly.", "success")
         return redirect(url_for("main.contact"))
     return render_template("main/contact.html", form=form)

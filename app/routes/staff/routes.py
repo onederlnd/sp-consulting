@@ -1,12 +1,28 @@
-from flask import render_template, redirect, url_for, flash
+import os
+from werkzeug.utils import secure_filename
+from flask import (
+    render_template,
+    redirect,
+    url_for,
+    flash,
+    send_file,
+    abort,
+    request,
+)
 from flask_login import current_user
 from app.routes.staff import staff_bp
 from app.utils.decorators import staff_required, admin_required
 from app.extensions import db
 from app.models.user import User, set_password
 from app.models.organization import Organization, OrganizationUser, unique_slug
+from app.models.document import Document, DocumentVersion, get_upload_path, allowed_file
 from app.forms.auth import make_create_user_form
-from app.forms.staff import make_create_organization_form
+from app.forms.staff import (
+    make_create_organization_form,
+    make_upload_document_form,
+    make_edit_document_form,
+    make_upload_version_form,
+)
 from app.utils.email import send_invite_email
 from app.routes.auth.routes import generate_reset_token
 
@@ -32,13 +48,11 @@ def organizations():
 def create_organization():
     form = make_create_organization_form()
     if form.validate_on_submit():
-        # Check for duplicate org name
         existing_org = Organization.query.filter_by(name=form.org_name.data).first()
         if existing_org:
             flash("An organization with that name already exists.", "danger")
             return render_template("staff/create_organization.html", form=form)
 
-        # Check for duplicate user email
         existing_user = User.query.filter_by(
             email=form.owner_email.data.lower()
         ).first()
@@ -46,7 +60,6 @@ def create_organization():
             flash("A user with that email already exists.", "danger")
             return render_template("staff/create_organization.html", form=form)
 
-        # Create org
         org = Organization(
             name=form.org_name.data,
             slug=unique_slug(form.org_name.data),
@@ -56,7 +69,6 @@ def create_organization():
         db.session.add(org)
         db.session.flush()
 
-        # Create owner user with unusable placeholder password
         owner = User(
             email=form.owner_email.data.lower(),
             first_name=form.owner_first_name.data,
@@ -68,7 +80,6 @@ def create_organization():
         db.session.add(owner)
         db.session.flush()
 
-        # Link owner to org
         membership = OrganizationUser(
             user_id=owner.id,
             org_id=org.id,
@@ -77,7 +88,6 @@ def create_organization():
         db.session.add(membership)
         db.session.commit()
 
-        # Send password reset email so owner sets their own password
         token = generate_reset_token(owner.email)
         send_invite_email(owner, org, token)
 
@@ -105,11 +115,10 @@ def clients():
         all_clients = User.query.filter_by(role="client").order_by(User.last_name).all()
     else:
         all_clients = [
-            user
+            m.user
             for org in current_user.assigned_orgs
             for m in org.members
-            for user in [m.user]
-            if user.role == "client"
+            if m.user.role == "client"
         ]
     return render_template("staff/clients.html", clients=all_clients)
 
@@ -126,10 +135,185 @@ def settings():
     return render_template("staff/settings.html")
 
 
+# ── Document routes ───────────────────────────────────────────────────────────
+
+
 @staff_bp.route("/documents")
 @staff_required
 def documents():
-    return render_template("staff/documents.html")
+    if current_user.role == "admin":
+        all_docs = (
+            Document.query.filter_by(is_active=True)
+            .order_by(Document.created_at.desc())
+            .all()
+        )
+    else:
+        org_ids = [o.id for o in current_user.assigned_orgs]
+        all_docs = (
+            Document.query.filter(
+                Document.org_id.in_(org_ids),
+                Document.is_active == True,  # noqa: E712
+            )
+            .order_by(Document.created_at.desc())
+            .all()
+        )
+    return render_template("staff/documents.html", documents=all_docs)
+
+
+@staff_bp.route("/documents/upload", methods=["GET", "POST"])
+@staff_required
+def upload_document():
+    form = make_upload_document_form()
+
+    if current_user.role == "admin":
+        orgs = Organization.query.order_by(Organization.name).all()
+    else:
+        orgs = current_user.assigned_orgs
+
+    if form.validate_on_submit():
+        file = form.file.data
+        if not allowed_file(file.filename):
+            flash("File type not allowed.", "danger")
+            return render_template("staff/upload_document.html", form=form, orgs=orgs)
+
+        org_id = request.form.get("org_id", type=int)
+        org = Organization.query.get(org_id)
+        if not org:
+            flash("Please select an organization.", "danger")
+            return render_template("staff/upload_document.html", form=form, orgs=orgs)
+
+        original_filename = secure_filename(file.filename)
+        file_ext = original_filename.rsplit(".", 1)[1].lower()
+
+        doc = Document(
+            org_id=org.id,
+            uploaded_by_id=current_user.id,
+            name=form.name.data,
+            description=form.description.data,
+            file_type=file_ext,
+            client_visible=form.client_visible.data,
+            is_active=True,
+        )
+        db.session.add(doc)
+        db.session.flush()
+
+        stored_filename = f"v1_{original_filename}"
+        upload_path = get_upload_path(org.slug, doc.id, stored_filename)
+        os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+        file.save(upload_path)
+
+        version = DocumentVersion(
+            document_id=doc.id,
+            uploaded_by_id=current_user.id,
+            filename=stored_filename,
+            original_filename=original_filename,
+            file_size=os.path.getsize(upload_path),
+            version_number=1,
+        )
+        db.session.add(version)
+        db.session.commit()
+
+        flash(f"'{doc.name}' uploaded successfully.", "success")
+        return redirect(url_for("staff.documents"))
+
+    return render_template("staff/upload_document.html", form=form, orgs=orgs)
+
+
+@staff_bp.route("/documents/<int:doc_id>")
+@staff_required
+def document_detail(doc_id):
+    doc = Document.query.get_or_404(doc_id)
+    upload_form = make_upload_version_form()
+    edit_form = make_edit_document_form()
+    edit_form.name.data = doc.name
+    edit_form.description.data = doc.description
+    edit_form.client_visible.data = doc.client_visible
+    return render_template(
+        "staff/document_detail.html",
+        doc=doc,
+        upload_form=upload_form,
+        edit_form=edit_form,
+    )
+
+
+@staff_bp.route("/documents/<int:doc_id>/edit", methods=["POST"])
+@staff_required
+def edit_document(doc_id):
+    doc = Document.query.get_or_404(doc_id)
+    form = make_edit_document_form()
+    if form.validate_on_submit():
+        doc.name = form.name.data
+        doc.description = form.description.data
+        doc.client_visible = form.client_visible.data
+        db.session.commit()
+        flash("Document updated.", "success")
+    return redirect(url_for("staff.document_detail", doc_id=doc.id))
+
+
+@staff_bp.route("/documents/<int:doc_id>/upload-version", methods=["POST"])
+@staff_required
+def upload_version(doc_id):
+    doc = Document.query.get_or_404(doc_id)
+    form = make_upload_version_form()
+    if form.validate_on_submit():
+        file = form.file.data
+        if not allowed_file(file.filename):
+            flash("File type not allowed.", "danger")
+            return redirect(url_for("staff.document_detail", doc_id=doc.id))
+
+        original_filename = secure_filename(file.filename)
+        next_version = (doc.version_count or 0) + 1
+        stored_filename = f"v{next_version}_{original_filename}"
+
+        org = doc.organization
+        upload_path = get_upload_path(org.slug, doc.id, stored_filename)
+        os.makedirs(os.path.dirname(upload_path), exist_ok=True)
+        file.save(upload_path)
+
+        version = DocumentVersion(
+            document_id=doc.id,
+            uploaded_by_id=current_user.id,
+            filename=stored_filename,
+            original_filename=original_filename,
+            file_size=os.path.getsize(upload_path),
+            version_number=next_version,
+        )
+        db.session.add(version)
+        db.session.commit()
+
+        flash(f"Version {next_version} uploaded.", "success")
+    return redirect(url_for("staff.document_detail", doc_id=doc.id))
+
+
+@staff_bp.route("/documents/<int:doc_id>/download")
+@staff_required
+def download_document(doc_id):
+    doc = Document.query.get_or_404(doc_id)
+    version = doc.latest_version
+    if not version:
+        abort(404)
+    org = doc.organization
+    path = get_upload_path(org.slug, doc.id, version.filename)
+    if not os.path.exists(path):
+        abort(404)
+    return send_file(
+        path,
+        as_attachment=True,
+        download_name=version.original_filename,
+    )
+
+
+@staff_bp.route("/documents/<int:doc_id>/delete", methods=["POST"])
+@staff_required
+def delete_document(doc_id):
+    doc = Document.query.get_or_404(doc_id)
+    doc.is_active = False
+    db.session.commit()
+    flash(f"'{doc.name}' has been removed.", "success")
+    return redirect(url_for("staff.documents"))
+
+
+# ── User management ───────────────────────────────────────────────────────────
 
 
 @staff_bp.route("/users")
