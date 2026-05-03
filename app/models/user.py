@@ -2,12 +2,6 @@ import bcrypt
 from app.extensions import db, login_manager
 from flask_login import UserMixin
 
-staff_clients = db.Table(
-    'staff_clients',
-    db.Column('staff_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
-    db.Column('client_id', db.Integer, db.ForeignKey('users.id'), primary_key=True),
-)
-
 
 class User(UserMixin, db.Model):
     __tablename__ = "users"
@@ -21,18 +15,33 @@ class User(UserMixin, db.Model):
     is_active = db.Column(db.Boolean, default=True, nullable=False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
 
-    # Staff → their assigned clients
-    assigned_clients = db.relationship(
-        'User',
-        secondary=staff_clients,
-        primaryjoin=id == staff_clients.c.staff_id,
-        secondaryjoin=id == staff_clients.c.client_id,
-        backref='assigned_staff',
+    # Org memberships (client side)
+    org_memberships = db.relationship(
+        "OrganizationUser",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+
+    # Orgs assigned to this staff member
+    assigned_orgs = db.relationship(
+        "Organization",
+        secondary="org_staff",
+        back_populates="assigned_staff",
+        lazy="joined",
     )
 
     @property
     def full_name(self):
         return f"{self.first_name} {self.last_name}"
+
+    @property
+    def organization(self):
+        """Primary organization for client users."""
+        membership = next(
+            (m for m in self.org_memberships if m.org_role == "owner"),
+            self.org_memberships[0] if self.org_memberships else None,
+        )
+        return membership.organization if membership else None
 
 
 def set_password(user, password):

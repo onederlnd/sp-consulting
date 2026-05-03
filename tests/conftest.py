@@ -41,6 +41,7 @@ def clean_db(db):
         for table in reversed(db.metadata.sorted_tables):
             conn.execute(table.delete())
         conn.commit()
+    db.session.expire_all()
 
 
 @pytest.fixture()

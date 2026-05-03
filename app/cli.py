@@ -6,10 +6,12 @@ from app.models.user import User, set_password
 
 def _seed_users():
     """Reusable seed function — called by CLI and auto-init."""
+    from app.models.organization import Organization, OrganizationUser, unique_slug
+
     users = [
         {
-            "email": "admin@sunceraypatterson.com",
-            "password": "changeme123!",
+            "email": "sunceraypatterson@gmail.com",
+            "password": "password123",
             "first_name": "Sunceray",
             "last_name": "Patterson",
             "role": "admin",
@@ -46,6 +48,7 @@ def _seed_users():
             "last_name": "Johnson",
             "role": "client",
             "is_active": True,
+            "org": "Johnson Consulting Group",
         },
         {
             "email": "client2@example.com",
@@ -54,6 +57,7 @@ def _seed_users():
             "last_name": "Webb",
             "role": "client",
             "is_active": True,
+            "org": "Webb Industries",
         },
         {
             "email": "client3@example.com",
@@ -62,6 +66,7 @@ def _seed_users():
             "last_name": "Chen",
             "role": "client",
             "is_active": False,
+            "org": "Chen & Associates",
         },
     ]
 
@@ -84,28 +89,45 @@ def _seed_users():
         db.session.add(user)
         db.session.flush()
         created[data["email"]] = user
-    # fmt: off
+
+        # Create org for client users
+        if data["role"] == "client" and data.get("org"):
+            org = Organization(
+                name=data["org"],
+                slug=unique_slug(data["org"]),
+                billing_email=data["email"],
+                is_active=data["is_active"],
+            )
+            db.session.add(org)
+            db.session.flush()
+
+            membership = OrganizationUser(
+                user_id=user.id,
+                org_id=org.id,
+                org_role="owner",
+            )
+            db.session.add(membership)
+
+    # Assign staff to orgs
     assignments = [
         (
             "staff@sunceraypatterson.com",
-            ["client1@example.com", "client2@example.com"]
+            ["Johnson Consulting Group", "Webb Industries"],
         ),
         (
             "staff2@sunceraypatterson.com",
-            ["client2@example.com", "client3@example.com"]
+            ["Webb Industries", "Chen & Associates"],
         ),
     ]
-    # fmt: on
-    for staff_email, client_emails in assignments:
+
+    for staff_email, org_names in assignments:
         staff = created.get(staff_email)
         if not staff:
             continue
-        for client_email in client_emails:
-            client = created.get(client_email)
-            if not client:
-                continue
-            if client not in staff.assigned_clients:
-                staff.assigned_clients.append(client)
+        for org_name in org_names:
+            org = Organization.query.filter_by(name=org_name).first()
+            if org and org not in staff.assigned_orgs:
+                staff.assigned_orgs.append(org)
 
     db.session.commit()
 

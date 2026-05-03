@@ -5,6 +5,10 @@ from datetime import datetime, timezone
 from app.extensions import db, login_manager, csrf, limiter, mail
 from app.cli import register_commands
 
+# Import models so Flask-Migrate can detect them
+from app.models import user  # noqa: F401
+from app.models import organization  # noqa: F401
+
 
 def create_app(config_name="development"):
     app = Flask(__name__)
@@ -17,9 +21,6 @@ def create_app(config_name="development"):
     limiter.init_app(app)
     mail.init_app(app)
     Migrate(app, db)
-
-    # Import models so Flask-Migrate can detect them
-    from app.models import user  # noqa: F401
 
     # Blueprints
     from app.routes.main import main_bp
@@ -45,23 +46,17 @@ def create_app(config_name="development"):
 
 
 def _auto_init(app):
-    """Create DB file, tables, and seed if first run."""
-    import os
+    """Seed if first run. Schema managed by Flask-Migrate."""
     from app.extensions import db
     from app.models.user import User
+    from sqlalchemy import inspect
 
-    # Create the database file and directory if needed
-    db_url = app.config.get("SQLALCHEMY_DATABASE_URI", "")
-    if db_url.startswith("sqlite:///"):
-        db_path = db_url.replace("sqlite:///", "")
-        db_dir = os.path.dirname(db_path)
-        if db_dir and not os.path.exists(db_dir):
-            os.makedirs(db_dir)
-            app.logger.info(f"Created database directory: {db_dir}")
-
-    db.create_all()
+    inspector = inspect(db.engine)
+    if not inspector.has_table("users"):
+        return  # tables not created yet -- skipp seeding1
 
     if User.query.first() is None:
         from app.cli import _seed_users
+
         _seed_users()
         app.logger.info("Database seeded with initial data.")

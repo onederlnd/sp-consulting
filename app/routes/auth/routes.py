@@ -61,14 +61,11 @@ def reset_password_request():
     if form.validate_on_submit():
         user = User.query.filter_by(email=form.email.data.lower()).first()
         if user:
-            pass
-            # token = generate_reset_token(user.email)
+            from app.utils.email import send_password_reset_email
 
-            # TODO: send email with token
-            # send_password_reset_email(user, token)
-            flash("If that email exists, a reset link has been sent.", "info")
-        else:
-            flash("If that email exists, a reset link has been sent.", "info")
+            token = generate_reset_token(user.email)
+            send_password_reset_email(user, token)
+        flash("If that email exists, a reset link has been sent.", "info")
         return redirect(url_for("auth.login"))
 
     return render_template("auth/reset_password_request.html", form=form)
