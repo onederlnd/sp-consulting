@@ -140,9 +140,9 @@ vvvvv ON HOLD until ready to go live vvvvv
 
 - [ ] `Message` model — threaded, two-way, client ↔ staff
 - [ ] Email notifications on new message
-- [ ] `Document` model — file storage, scoped to org
-- [ ] Staff upload, client download
-- [ ] Document versioning
+- [x] `Document` model — file storage, scoped to org
+- [x] Staff upload, client download
+- [x] Document versioning
 
 ---
 

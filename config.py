@@ -10,7 +10,8 @@ class BaseConfig:
     SECRET_KEY = os.environ.get("SECRET_KEY", "change-me")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WTF_CSRF_ENABLED = True
-
+    ANALYTICS_RETENTION_DAYS = 90
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16mb max upload
     # Mail
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
     MAIL_PORT = int(os.environ.get("MAIL_PORT", 587))

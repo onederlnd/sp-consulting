@@ -1,3 +1,4 @@
+import sys
 from flask import Flask
 from config import config_map
 from flask_migrate import Migrate
@@ -9,6 +10,7 @@ from app.cli import register_commands
 from app.models import user  # noqa: F401
 from app.models import organization  # noqa: F401
 from app.models import document  # noqa: F401
+from app.models import analytics  # noqa: F401
 
 
 def create_app(config_name="development"):
@@ -28,11 +30,13 @@ def create_app(config_name="development"):
     from app.routes.auth import auth_bp
     from app.routes.client import client_bp
     from app.routes.staff import staff_bp
+    from app.routes.analytics import analytics_bp
 
     app.register_blueprint(main_bp)
     app.register_blueprint(auth_bp, url_prefix="/auth")
     app.register_blueprint(client_bp, url_prefix="/client")
     app.register_blueprint(staff_bp, url_prefix="/staff")
+    app.register_blueprint(analytics_bp, url_prefix="/analytics")
 
     register_commands(app)
 
@@ -40,8 +44,9 @@ def create_app(config_name="development"):
     def inject_now():
         return {"now": datetime.now(timezone.utc)}
 
-    with app.app_context():
-        _auto_init(app)
+    if "db" not in sys.argv:
+        with app.app_context():
+            _auto_init(app)
 
     return app
 
@@ -52,12 +57,15 @@ def _auto_init(app):
     from app.models.user import User
     from sqlalchemy import inspect
 
+    if "flask" in sys.argv:
+        return
+
     inspector = inspect(db.engine)
     if not inspector.has_table("users"):
         return  # tables not created yet -- skipp seeding1
+    with app.app_context():
+        if User.query.first() is None:
+            from app.cli import _seed_users
 
-    if User.query.first() is None:
-        from app.cli import _seed_users
-
-        _seed_users()
-        app.logger.info("Database seeded with initial data.")
+    _seed_users()
+    app.logger.info("Database seeded with initial data.")

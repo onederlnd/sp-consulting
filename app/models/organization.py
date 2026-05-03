@@ -30,6 +30,7 @@ class Organization(db.Model):
     billing_email = db.Column(db.String(255), nullable=False)
     plan = db.Column(db.String(50), nullable=True)
     is_active = db.Column(db.Boolean, default=True, nullable=False)
+    analytics_key = db.Column(db.String(255), nullable=True)
     created_at = db.Column(
         db.DateTime,
         default=lambda: datetime.now(timezone.utc),
@@ -47,6 +48,13 @@ class Organization(db.Model):
         secondary="org_staff",
         back_populates="assigned_orgs",
         lazy="joined",
+    )
+    # Add this column to the Organization model
+    analytics_key = db.Column(
+        db.String(32),
+        unique=True,
+        nullable=True,
+        default=None,
     )
 
     @property
