@@ -1,0 +1,11 @@
+<p><strong>New contact form submission</strong> from the Sunceray Patterson Consulting website.</p>
+<table>
+  <tr><td><strong>Name</strong></td><td>{{ data.first_name }} {{ data.last_name }}</td></tr>
+  <tr><td><strong>Email</strong></td><td><a href="mailto:{{ data.email }}">{{ data.email }}</a></td></tr>
+  <tr><td><strong>Organization</strong></td><td>{{ data.organization or '—' }}</td></tr>
+  <tr><td><strong>Service Interest</strong></td><td>{{ data.service or '—' }}</td></tr>
+</table>
+<p><strong>Message:</strong></p>
+<p>{{ data.message }}</p>
+<hr>
+<p style="color:#888; font-size:0.85em;">Reply directly to this email to respond to {{ data.first_name }}.</p>

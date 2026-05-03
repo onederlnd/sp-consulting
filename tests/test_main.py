@@ -63,3 +63,23 @@ def test_contact_form_invalid_email(client):
         follow_redirects=True,
     )
     assert b"Invalid email" in response.data
+
+
+def test_contact_form_sends_email(client):
+    from unittest.mock import patch
+
+    with patch("app.routes.main.routes.send_contact_email") as mock_send:
+        response = client.post(
+            "/contact",
+            data={
+                "first_name": "Jane",
+                "last_name": "Smith",
+                "email": "jane@test.com",
+                "organization": "Test Co",
+                "service": "strategy",
+                "message": "I need help.",
+            },
+            follow_redirects=True,
+        )
+        assert mock_send.called
+        assert b"message has been sent" in response.data

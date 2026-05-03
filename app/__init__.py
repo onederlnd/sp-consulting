@@ -8,6 +8,7 @@ from app.cli import register_commands
 # Import models so Flask-Migrate can detect them
 from app.models import user  # noqa: F401
 from app.models import organization  # noqa: F401
+from app.models import document  # noqa: F401
 
 
 def create_app(config_name="development"):

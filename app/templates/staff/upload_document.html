@@ -1,0 +1,87 @@
+{% extends "portal_base.html" %}
+{% block title %}Upload Document — Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+{% set active = 'documents' %}
+<div class="portal-layout">
+
+  {% include 'staff/_sidebar.html' with context %}
+
+  <div class="portal-content">
+    <div class="portal-header">
+      <h1>Upload Document</h1>
+      <p>Upload a file to a client organization.</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div style="padding:12px 16px; margin-bottom:16px; border-left:3px solid {% if category == 'danger' %}#ff4f4f{% elif category == 'success' %}var(--accent){% else %}#888{% endif %}; background:rgba(255,255,255,0.03); font-size:0.875rem;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div style="max-width:560px;">
+      <form method="POST" action="{{ url_for('staff.upload_document') }}"
+            enctype="multipart/form-data" novalidate>
+        {{ form.hidden_tag() }}
+
+        <div class="form-group">
+          <label style="font-size:0.8rem; color:#888; letter-spacing:0.06em; text-transform:uppercase;">
+            Organization
+          </label>
+          <select name="org_id" style="width:100%; background:rgba(255,255,255,0.03); border:1px solid var(--border); color:var(--text); padding:12px 16px; font-family:var(--font-sans); font-size:0.9rem;">
+            <option value="">Select organization...</option>
+            {% for org in orgs %}
+            <option value="{{ org.id }}">{{ org.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          {{ form.name.label }}
+          {{ form.name(placeholder="Q1 2026 Strategy Report") }}
+          {% if form.name.errors %}
+            {% for e in form.name.errors %}
+              <p style="color:#ff4f4f; font-size:0.75rem; margin-top:4px;">{{ e }}</p>
+            {% endfor %}
+          {% endif %}
+        </div>
+
+        <div class="form-group">
+          {{ form.description.label }}
+          {{ form.description(placeholder="Optional description...") }}
+        </div>
+
+        <div class="form-group">
+          {{ form.file.label }}
+          {{ form.file() }}
+          {% if form.file.errors %}
+            {% for e in form.file.errors %}
+              <p style="color:#ff4f4f; font-size:0.75rem; margin-top:4px;">{{ e }}</p>
+            {% endfor %}
+          {% endif %}
+          <p style="color:#555; font-size:0.75rem; margin-top:6px;">
+            Allowed: PDF, Word, Excel, PowerPoint, CSV, images (PNG, JPG)
+          </p>
+        </div>
+
+        <div class="form-group" style="display:flex; align-items:center; gap:12px;">
+          {{ form.client_visible() }}
+          <label for="client_visible" style="font-size:0.875rem; color:#aaa; cursor:pointer;">
+            Visible to client
+          </label>
+        </div>
+
+        <div style="display:flex; gap:12px; margin-top:32px;">
+          <button type="submit" class="btn btn-primary">Upload Document →</button>
+          <a href="{{ url_for('staff.documents') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

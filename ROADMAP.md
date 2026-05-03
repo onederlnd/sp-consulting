@@ -83,7 +83,7 @@
 - [x] Homepage, About, Services, Contact pages
 - [x] Static assets wired — CSS, JS
 - [x] SEO basics (meta tags, page titles)
-- [ ] Contact form with email delivery
+- [x] Contact form with email delivery
 
 ---
 
@@ -102,15 +102,17 @@
 
 ## Phase 7 — CI/CD & Infrastructure 🔲 Up Next
 
-- [ ] GitHub Actions `ci.yml` — lint (flake8), test (pytest), security (bandit + safety)
-- [ ] GitHub Actions `cd.yml` — deploy to Fly.io on merge to `staging` and `main`
-- [ ] `FLY_API_TOKEN` secret set in GitHub Actions
-- [ ] Fly.io apps provisioned (staging + production)
-- [ ] Persistent volume mounted at `/data/app.db`
-- [ ] `fly.toml` configured (region, volume, health checks)
-- [ ] HTTPS enforced at Fly.io edge
-- [ ] Secrets managed via `fly secrets set`
-- [ ] Migrate from SQLite to PostgreSQL for production
+- [x] GitHub Actions `ci.yml` — lint (flake8), test (pytest), security (bandit + safety)
+- [x] GitHub Actions `cd.yml` — deploy to Fly.io on merge to `staging` and `main`
+
+vvvvv ON HOLD until ready to go live vvvvv
+- [h] `FLY_API_TOKEN` secret set in GitHub Actions
+- [h] Fly.io apps provisioned (staging + production)
+- [h] Persistent volume mounted at `/data/app.db`
+- [h] `fly.toml` configured (region, volume, health checks)
+- [h] HTTPS enforced at Fly.io edge
+- [h] Secrets managed via `fly secrets set`
+- [h] Migrate from SQLite to PostgreSQL for production
 
 ---
 

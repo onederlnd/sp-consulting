@@ -27,6 +27,9 @@ class DevelopmentConfig(BaseConfig):
     SQLALCHEMY_DATABASE_URI = os.environ.get(
         "DATABASE_URL", f"sqlite:///{os.path.join(BASE_DIR, 'dev.db')}"
     )
+    MAIL_USE_TLS = False
+    MAIL_PORT = 1025
+    UPLOAD_PATH = os.path.join(BASE_DIR, "instance", "uploads")
 
 
 class StagingConfig(BaseConfig):
@@ -45,11 +48,13 @@ class TestingConfig(BaseConfig):
     SERVER_NAME = None
     RATELIMIT_ENABLED = False
     MAIL_SUPPRESS_SEND = True
+    UPLOAD_PATH = os.path.join(BASE_DIR, "instance", "uploads_test")
 
 
 class ProductionConfig(BaseConfig):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get("DATABASE_URL")
+    UPLOAD_PATH = "/data/uploads"
 
 
 config_map = {

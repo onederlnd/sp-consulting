@@ -61,3 +61,7 @@ Thumbs.db
 .idea/
 *.swp
 *.swo
+
+# file structure
+instance/uploads/
+instance/uploads_test/

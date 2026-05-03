@@ -11,20 +11,32 @@
     <div class="portal-header" style="display:flex; justify-content:space-between; align-items:flex-start;">
       <div>
         <h1>Documents</h1>
-        <p>Client-facing files, deliverables, and shared resources.</p>
+        <p>Client-facing files and deliverables.</p>
       </div>
-      <button class="btn btn-primary" disabled style="opacity:0.4; cursor:not-allowed;">
+      <a href="{{ url_for('staff.upload_document') }}" class="btn btn-primary">
         Upload Document →
-      </button>
+      </a>
     </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div style="padding:12px 16px; margin-bottom:16px; border-left:3px solid {% if category == 'danger' %}#ff4f4f{% elif category == 'success' %}var(--accent){% else %}#888{% endif %}; background:rgba(255,255,255,0.03); font-size:0.875rem;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
 
     {% if documents %}
     <table class="data-table">
       <thead>
         <tr>
           <th>Name</th>
-          <th>Client</th>
+          <th>Organization</th>
           <th>Type</th>
+          <th>Version</th>
+          <th>Client Visible</th>
           <th>Uploaded</th>
           <th>Action</th>
         </tr>
@@ -33,10 +45,35 @@
         {% for doc in documents %}
         <tr>
           <td>{{ doc.name }}</td>
-          <td style="color:#777;">{{ doc.client_name }}</td>
-          <td><span style="font-family:var(--font-mono); font-size:0.75rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--accent);">{{ doc.file_type }}</span></td>
-          <td style="color:#555; font-size:0.8rem;">{{ doc.uploaded_at.strftime('%b %d, %Y') }}</td>
-          <td><a href="{{ doc.url }}" style="color:var(--accent); font-size:0.8rem; font-family:var(--font-mono); letter-spacing:0.06em;">Download →</a></td>
+          <td style="color:#777; font-size:0.85rem;">{{ doc.organization.name }}</td>
+          <td>
+            <span style="font-family:var(--font-mono); font-size:0.75rem; letter-spacing:0.06em; text-transform:uppercase; color:var(--accent);">
+              {{ doc.file_type }}
+            </span>
+          </td>
+          <td style="color:#777; font-size:0.85rem;">
+            v{{ doc.version_count }}
+          </td>
+          <td>
+            {% if doc.client_visible %}
+              <span style="color:#4caf7d; font-size:0.75rem; font-family:var(--font-mono);">VISIBLE</span>
+            {% else %}
+              <span style="color:#888; font-size:0.75rem; font-family:var(--font-mono);">HIDDEN</span>
+            {% endif %}
+          </td>
+          <td style="color:#555; font-size:0.8rem;">
+            {{ doc.created_at.strftime('%b %d, %Y') }}
+          </td>
+          <td style="display:flex; gap:12px;">
+            <a href="{{ url_for('staff.document_detail', doc_id=doc.id) }}"
+               style="color:var(--accent); font-size:0.8rem; font-family:var(--font-mono); letter-spacing:0.06em;">
+              View →
+            </a>
+            <a href="{{ url_for('staff.download_document', doc_id=doc.id) }}"
+               style="color:#777; font-size:0.8rem; font-family:var(--font-mono); letter-spacing:0.06em;">
+              Download
+            </a>
+          </td>
         </tr>
         {% endfor %}
       </tbody>
@@ -44,7 +81,9 @@
     {% else %}
     <div style="padding:48px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); text-align:center;">
       <p style="color:#555; font-size:0.9rem; margin-bottom:8px;">No documents uploaded yet.</p>
-      <p style="color:#444; font-size:0.8rem;">Document management will be available in a future update.</p>
+      <a href="{{ url_for('staff.upload_document') }}" class="btn btn-primary" style="margin-top:16px;">
+        Upload First Document →
+      </a>
     </div>
     {% endif %}
 

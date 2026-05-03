@@ -1,0 +1,139 @@
+{% extends "portal_base.html" %}
+{% block title %}{{ doc.name }} — Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+{% set active = 'documents' %}
+<div class="portal-layout">
+
+  {% include 'staff/_sidebar.html' with context %}
+
+  <div class="portal-content">
+    <div class="portal-header" style="display:flex; justify-content:space-between; align-items:flex-start;">
+      <div>
+        <h1>{{ doc.name }}</h1>
+        <p style="font-family:var(--font-mono); font-size:0.8rem; color:#555;">
+          {{ doc.organization.name }} &mdash;
+          <span style="text-transform:uppercase;">{{ doc.file_type }}</span> &mdash;
+          {{ doc.version_count }} version{{ 's' if doc.version_count != 1 }}
+        </p>
+      </div>
+      <div style="display:flex; gap:12px;">
+        <a href="{{ url_for('staff.download_document', doc_id=doc.id) }}" class="btn btn-primary">
+          Download Latest →
+        </a>
+        <form method="POST" action="{{ url_for('staff.delete_document', doc_id=doc.id) }}"
+              onsubmit="return confirm('Remove this document?')">
+          {{ edit_form.hidden_tag() }}
+          <button type="submit" class="btn btn-secondary" style="color:#ff4f4f;">
+            Remove
+          </button>
+        </form>
+      </div>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div style="padding:12px 16px; margin-bottom:16px; border-left:3px solid {% if category == 'danger' %}#ff4f4f{% elif category == 'success' %}var(--accent){% else %}#888{% endif %}; background:rgba(255,255,255,0.03); font-size:0.875rem;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- EDIT FORM -->
+    <div style="margin-bottom:40px;">
+      <h2 style="font-family:var(--font-display); font-size:20px; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:20px;">
+        Details
+      </h2>
+      <form method="POST" action="{{ url_for('staff.edit_document', doc_id=doc.id) }}"
+            style="max-width:560px;" novalidate>
+        {{ edit_form.hidden_tag() }}
+
+        <div class="form-group">
+          {{ edit_form.name.label }}
+          {{ edit_form.name() }}
+        </div>
+
+        <div class="form-group">
+          {{ edit_form.description.label }}
+          {{ edit_form.description() }}
+        </div>
+
+        <div class="form-group" style="display:flex; align-items:center; gap:12px;">
+          {{ edit_form.client_visible() }}
+          <label for="client_visible" style="font-size:0.875rem; color:#aaa; cursor:pointer;">
+            Visible to client
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary" style="margin-top:16px;">
+          Save Changes →
+        </button>
+      </form>
+    </div>
+
+    <!-- VERSION HISTORY -->
+    <div style="margin-bottom:40px;">
+      <h2 style="font-family:var(--font-display); font-size:20px; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:20px;">
+        Version History
+      </h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Version</th>
+            <th>Filename</th>
+            <th>Size</th>
+            <th>Uploaded By</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for version in doc.versions %}
+          <tr>
+            <td>
+              <span style="font-family:var(--font-mono); font-size:0.85rem; color:{% if loop.first %}var(--accent){% else %}#666{% endif %};">
+                v{{ version.version_number }}{% if loop.first %} (latest){% endif %}
+              </span>
+            </td>
+            <td style="font-size:0.85rem; color:#aaa;">{{ version.original_filename }}</td>
+            <td style="font-size:0.85rem; color:#666;">{{ version.file_size_display }}</td>
+            <td style="font-size:0.85rem; color:#777;">{{ version.uploaded_by.full_name }}</td>
+            <td style="font-size:0.8rem; color:#555;">
+              {{ version.created_at.strftime('%b %d, %Y') }}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <!-- UPLOAD NEW VERSION -->
+    <div>
+      <h2 style="font-family:var(--font-display); font-size:20px; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:20px;">
+        Upload New Version
+      </h2>
+      <form method="POST"
+            action="{{ url_for('staff.upload_version', doc_id=doc.id) }}"
+            enctype="multipart/form-data"
+            style="max-width:560px;"
+            novalidate>
+        {{ upload_form.hidden_tag() }}
+        <div class="form-group">
+          {{ upload_form.file.label }}
+          {{ upload_form.file() }}
+          {% if upload_form.file.errors %}
+            {% for e in upload_form.file.errors %}
+              <p style="color:#ff4f4f; font-size:0.75rem; margin-top:4px;">{{ e }}</p>
+            {% endfor %}
+          {% endif %}
+        </div>
+        <button type="submit" class="btn btn-primary">
+          Upload New Version →
+        </button>
+      </form>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
