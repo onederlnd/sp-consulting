@@ -48,6 +48,13 @@ class Organization(db.Model):
         back_populates="assigned_orgs",
         lazy="joined",
     )
+    # Analytics
+    analytics_key = db.Column(
+        db.String(32),
+        unique=True,
+        nullable=True,
+        default=None,
+    )
 
     @property
     def owner(self):

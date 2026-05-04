@@ -1,0 +1,219 @@
+{% extends "portal_base.html" %}
+{% block title %}{{ org.name }} Analytics — Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+{% set active = 'analytics' %}
+<div class="portal-layout">
+
+  {% include 'staff/_sidebar.html' with context %}
+
+  <div class="portal-content">
+    <div class="portal-header" style="display:flex; justify-content:space-between; align-items:flex-start;">
+      <div>
+        <h1>{{ org.name }}</h1>
+        <p>Analytics — last 30 days</p>
+      </div>
+      <a href="{{ url_for('analytics.export_csv', org_slug=org.slug) }}"
+         class="btn btn-secondary">
+        Export CSV →
+      </a>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div style="padding:12px 16px; margin-bottom:16px; border-left:3px solid {% if category == 'danger' %}#ff4f4f{% elif category == 'success' %}var(--accent){% else %}#888{% endif %}; background:rgba(255,255,255,0.03); font-size:0.875rem;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <!-- TODAY STATS -->
+    <div class="dashboard-grid" style="margin-bottom:40px;">
+      <div class="dash-card">
+        <p class="dash-card-label">Today's Pageviews</p>
+        <p class="dash-card-value">{{ today_pageviews }}</p>
+      </div>
+      <div class="dash-card">
+        <p class="dash-card-label">Today's Visitors</p>
+        <p class="dash-card-value">{{ today_visitors }}</p>
+      </div>
+    </div>
+
+    <!-- 30-DAY TREND -->
+    {% if trend %}
+    <div style="margin-bottom:40px;">
+      <h2 style="font-family:var(--font-display); font-size:20px; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:20px;">
+        30-Day Trend
+      </h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Pageviews</th>
+            <th>Visitors</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in trend %}
+          <tr>
+            <td style="font-family:var(--font-mono); font-size:0.85rem;">{{ row.date }}</td>
+            <td style="font-family:var(--font-mono);">{{ row.pageviews }}</td>
+            <td style="font-family:var(--font-mono);">{{ row.visitors }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+    <!-- TOP PAGES -->
+    {% if top_pages %}
+    <div style="margin-bottom:40px;">
+      <h2 style="font-family:var(--font-display); font-size:20px; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:20px;">
+        Top Pages
+      </h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>URL</th>
+            <th>Title</th>
+            <th>Views</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for page in top_pages %}
+          <tr>
+            <td style="font-family:var(--font-mono); font-size:0.8rem; color:#777;">
+              {{ page.url | truncate(60) }}
+            </td>
+            <td style="font-size:0.85rem;">{{ page.title or '—' }}</td>
+            <td style="font-family:var(--font-mono);">{{ page.views }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+    <!-- REFERRERS -->
+    {% if referrers %}
+    <div style="margin-bottom:40px;">
+      <h2 style="font-family:var(--font-display); font-size:20px; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:20px;">
+        Referrers
+      </h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Source</th>
+            <th>Visits</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ref in referrers %}
+          <tr>
+            <td style="font-family:var(--font-mono); font-size:0.8rem; color:#777;">
+              {{ ref.referrer | truncate(80) }}
+            </td>
+            <td style="font-family:var(--font-mono);">{{ ref.count }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+    <!-- DEVICES -->
+    {% if devices %}
+    <div style="margin-bottom:40px;">
+      <h2 style="font-family:var(--font-display); font-size:20px; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:20px;">
+        Devices
+      </h2>
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Device</th>
+            <th>Events</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for device in devices %}
+          <tr>
+            <td style="text-transform:capitalize;">{{ device.device_type or 'unknown' }}</td>
+            <td style="font-family:var(--font-mono);">{{ device.count }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+    <!-- DOMAIN MANAGEMENT -->
+    <div>
+      <h2 style="font-family:var(--font-display); font-size:20px; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:20px;">
+        Registered Domains
+      </h2>
+      <p style="color:#777; font-size:0.85rem; margin-bottom:16px;">
+        Only events from these domains will be accepted for this organization.
+      </p>
+
+      {% if domains %}
+      <table class="data-table" style="margin-bottom:24px;">
+        <thead>
+          <tr>
+            <th>Domain</th>
+            <th>Added</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for domain in domains %}
+          <tr>
+            <td style="font-family:var(--font-mono); font-size:0.85rem;">
+              {{ domain.domain }}
+            </td>
+            <td style="color:#555; font-size:0.8rem;">
+              {{ domain.created_at.strftime('%b %d, %Y') }}
+            </td>
+            <td>
+              <form method="POST"
+                    action="{{ url_for('analytics.delete_domain', org_slug=org.slug, domain_id=domain.id) }}"
+                    onsubmit="return confirm('Remove {{ domain.domain }}?')">
+                <button type="submit"
+                        style="background:none; border:none; color:#ff4f4f; font-size:0.8rem; font-family:var(--font-mono); cursor:pointer; letter-spacing:0.06em;">
+                  Remove
+                </button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% endif %}
+
+      <form method="POST"
+            action="{{ url_for('analytics.add_domain', org_slug=org.slug) }}"
+            style="display:flex; gap:12px; max-width:480px;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <input type="text" name="domain"
+               placeholder="acme.com"
+               style="flex:1; background:rgba(255,255,255,0.03); border:1px solid var(--border); color:var(--text); padding:10px 16px; font-family:var(--font-mono); font-size:0.875rem;">
+        <button type="submit" class="btn btn-primary">Add Domain →</button>
+      </form>
+
+      <!-- TRACKING SCRIPT -->
+      <div style="margin-top:32px;">
+        <h3 style="font-family:var(--font-display); font-size:16px; text-transform:uppercase; letter-spacing:0.04em; margin-bottom:12px;">
+          Tracking Script
+        </h3>
+        <p style="color:#777; font-size:0.85rem; margin-bottom:12px;">
+          Add this to the <code>&lt;head&gt;</code> of every page you want to track.
+        </p>
+        <pre style="background:rgba(0,0,0,0.3); border:1px solid var(--border); padding:16px; font-family:var(--font-mono); font-size:0.8rem; color:#aaa; overflow-x:auto; white-space:pre-wrap;">&lt;script src="{{ request.host_url }}static/js/spc-analytics.js" data-org="{{ org.slug }}"&gt;&lt;/script&gt;</pre>
+      </div>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,140 @@
+{% extends "portal_base.html" %}
+{% block title %}404 — Page Not Found · Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+<div class="error-page">
+  <div class="error-bg-text">404</div>
+
+  <div class="container error-container">
+    <div class="error-tag mono">
+      <span class="accent">HTTP</span> / 404
+    </div>
+
+    <h1 class="error-headline">
+      PAGE<br>
+      <em class="accent">NOT</em><br>
+      FOUND
+    </h1>
+
+    <div class="error-rule"></div>
+
+    <p class="error-body">
+      The page you're looking for has moved, been removed, or never existed.
+      Let's get you back on track.
+    </p>
+
+    <div class="error-actions">
+      <a href="{{ url_for('main.index') }}" class="btn btn-primary">← Back to Home</a>
+      <a href="{{ url_for('main.contact') }}" class="btn btn-secondary">Contact Us</a>
+    </div>
+
+    <div class="error-links">
+      <span class="mono" style="color:#444; font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase;">Quick links</span>
+      <div class="error-quicklinks">
+        <a href="{{ url_for('main.services') }}">Services</a>
+        <a href="{{ url_for('main.about') }}">About</a>
+        <a href="{{ url_for('main.contact') }}">Contact</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.error-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: var(--nav-h);
+  position: relative;
+  overflow: hidden;
+}
+.error-bg-text {
+  font-family: var(--font-display);
+  font-size: clamp(200px, 30vw, 420px);
+  color: rgba(255,255,255,0.018);
+  position: absolute;
+  right: -2%;
+  top: 50%;
+  transform: translateY(-50%);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -0.05em;
+}
+.error-container {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  padding-top: 80px;
+  padding-bottom: 100px;
+}
+.error-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 32px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+}
+.error-headline {
+  font-family: var(--font-display);
+  font-size: clamp(80px, 12vw, 160px);
+  line-height: 0.88;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+.error-rule {
+  width: 60px;
+  height: 3px;
+  background: var(--accent);
+  margin-bottom: 32px;
+}
+.error-body {
+  font-size: 1.05rem;
+  color: #888;
+  max-width: 420px;
+  line-height: 1.75;
+  margin-bottom: 48px;
+}
+.error-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 64px;
+}
+.error-links {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+.error-quicklinks {
+  display: flex;
+  gap: 32px;
+}
+.error-quicklinks a {
+  font-size: 0.85rem;
+  color: #666;
+  letter-spacing: 0.04em;
+  transition: color 0.2s;
+  position: relative;
+}
+.error-quicklinks a::after {
+  content: '';
+  position: absolute;
+  bottom: -2px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--accent);
+  transition: width 0.3s var(--ease-out);
+}
+.error-quicklinks a:hover { color: var(--white); }
+.error-quicklinks a:hover::after { width: 100%; }
+</style>
+{% endblock %}

@@ -11,6 +11,12 @@ class BaseConfig:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     WTF_CSRF_ENABLED = True
 
+    # File upload
+    MAX_CONTENT_LENGTH = 16 * 1024 * 1024
+
+    # Analytics
+    ANALYTICS_RETENTION_DAYS = 90
+
     # Mail
     MAIL_SERVER = os.environ.get("MAIL_SERVER", "smtp.gmail.com")
     MAIL_PORT = int(os.environ.get("MAIL_PORT", 587))

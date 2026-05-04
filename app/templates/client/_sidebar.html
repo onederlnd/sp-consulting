@@ -3,6 +3,7 @@
     <p class="sidebar-label">Portal</p>
     <a href="{{ url_for('client.index') }}" {% if active == 'index' %}class="active"{% endif %}>Dashboard</a>
     <a href="{{ url_for('client.documents') }}" {% if active == 'documents' %}class="active"{% endif %}>Documents</a>
+    <a href="{{ url_for('analytics.client_dashboard') }}" {% if active == 'analytics' %}class="active"{% endif %}>Analytics</a>
     <a href="{{ url_for('client.messages') }}" {% if active == 'messages' %}class="active"{% endif %}>Messages</a>
     <a href="{{ url_for('client.reports') }}" {% if active == 'reports' %}class="active"{% endif %}>Reports</a>
   </div>

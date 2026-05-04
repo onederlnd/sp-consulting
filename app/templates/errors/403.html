@@ -1,0 +1,138 @@
+{% extends "portal_base.html" %}
+{% block title %}403 — Access Denied · Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+<div class="error-page">
+  <div class="error-bg-text">403</div>
+
+  <div class="container error-container">
+    <div class="error-tag mono">
+      <span class="accent">HTTP</span> / 403
+    </div>
+
+    <h1 class="error-headline">
+      ACCESS<br>
+      <em class="accent">DENIED</em>
+    </h1>
+
+    <div class="error-rule"></div>
+
+    <p class="error-body">
+      You don't have permission to view this page. If you believe this is a mistake,
+      please sign in or reach out to your account contact.
+    </p>
+
+    <div class="error-actions">
+      {% if not current_user.is_authenticated %}
+        <a href="{{ url_for('auth.login') }}" class="btn btn-primary">Sign In</a>
+      {% else %}
+        <a href="javascript:history.back()" class="btn btn-primary">← Go Back</a>
+      {% endif %}
+      <a href="{{ url_for('main.contact') }}" class="btn btn-secondary">Get Help</a>
+    </div>
+
+    <div class="error-detail">
+      <span class="mono" style="color:#333; font-size:0.7rem; letter-spacing:0.12em; text-transform:uppercase;">
+        Error reference
+      </span>
+      <code class="error-ref mono">403 · FORBIDDEN · {{ request.path }}</code>
+    </div>
+  </div>
+</div>
+
+<style>
+.error-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: var(--nav-h);
+  position: relative;
+  overflow: hidden;
+}
+.error-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 60% at 90% 50%, rgba(255,79,79,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.error-bg-text {
+  font-family: var(--font-display);
+  font-size: clamp(200px, 30vw, 420px);
+  color: rgba(255,79,79,0.04);
+  position: absolute;
+  right: -2%;
+  top: 50%;
+  transform: translateY(-50%);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -0.05em;
+}
+.error-container {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  padding-top: 80px;
+  padding-bottom: 100px;
+}
+.error-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 32px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+}
+.error-headline {
+  font-family: var(--font-display);
+  font-size: clamp(80px, 12vw, 160px);
+  line-height: 0.88;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+.error-headline em {
+  font-style: normal;
+  color: #ff4f4f;
+}
+.error-rule {
+  width: 60px;
+  height: 3px;
+  background: #ff4f4f;
+  margin-bottom: 32px;
+}
+.error-body {
+  font-size: 1.05rem;
+  color: #888;
+  max-width: 420px;
+  line-height: 1.75;
+  margin-bottom: 48px;
+}
+.error-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 64px;
+}
+.error-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.error-ref {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  color: #3a3a3a;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  display: inline-block;
+}
+</style>
+{% endblock %}

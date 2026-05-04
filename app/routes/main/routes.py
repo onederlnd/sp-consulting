@@ -31,3 +31,8 @@ def contact():
         flash("Your message has been sent. We'll be in touch shortly.", "success")
         return redirect(url_for("main.contact"))
     return render_template("main/contact.html", form=form)
+
+
+@main_bp.route("/services")
+def services():
+    return render_template("main/services.html")

@@ -1,0 +1,160 @@
+{% extends "portal_base.html" %}
+{% block title %}500 — Server Error · Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+<div class="error-page">
+  <div class="error-bg-text">500</div>
+
+  <div class="container error-container">
+    <div class="error-tag mono">
+      <span style="color:#ffb447;">HTTP</span> / 500
+    </div>
+
+    <h1 class="error-headline">
+      SERVER<br>
+      <em>ERROR</em>
+    </h1>
+
+    <div class="error-rule"></div>
+
+    <p class="error-body">
+      Something went wrong on our end. Our team has been notified and is working on it.
+      Please try again in a few moments.
+    </p>
+
+    <div class="error-actions">
+      <a href="javascript:location.reload()" class="btn btn-primary">Try Again</a>
+      <a href="{{ url_for('main.index') }}" class="btn btn-secondary">← Home</a>
+    </div>
+
+    <div class="error-status">
+      <div class="status-row">
+        <span class="mono" style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:#444;">Status</span>
+        <div class="status-indicator">
+          <span class="status-dot"></span>
+          <span class="mono" style="font-size:0.72rem;letter-spacing:0.08em;color:#ffb447;">INVESTIGATING</span>
+        </div>
+      </div>
+      <div class="status-row">
+        <span class="mono" style="font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;color:#444;">Path</span>
+        <code class="mono" style="font-size:0.72rem;color:#555;">{{ request.path }}</code>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.error-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  padding-top: var(--nav-h);
+  position: relative;
+  overflow: hidden;
+}
+.error-page::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 50% 60% at 90% 50%, rgba(255,180,71,0.04) 0%, transparent 70%);
+  pointer-events: none;
+}
+.error-bg-text {
+  font-family: var(--font-display);
+  font-size: clamp(200px, 30vw, 420px);
+  color: rgba(255,180,71,0.035);
+  position: absolute;
+  right: -2%;
+  top: 50%;
+  transform: translateY(-50%);
+  line-height: 1;
+  pointer-events: none;
+  user-select: none;
+  letter-spacing: -0.05em;
+}
+.error-container {
+  position: relative;
+  z-index: 1;
+  max-width: 680px;
+  padding-top: 80px;
+  padding-bottom: 100px;
+}
+.error-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.7rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #555;
+  margin-bottom: 32px;
+  padding: 8px 14px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+}
+.error-headline {
+  font-family: var(--font-display);
+  font-size: clamp(80px, 12vw, 160px);
+  line-height: 0.88;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+  margin-bottom: 40px;
+}
+.error-headline em {
+  font-style: normal;
+  color: #ffb447;
+  display: block;
+}
+.error-rule {
+  width: 60px;
+  height: 3px;
+  background: #ffb447;
+  margin-bottom: 32px;
+}
+.error-body {
+  font-size: 1.05rem;
+  color: #888;
+  max-width: 420px;
+  line-height: 1.75;
+  margin-bottom: 48px;
+}
+.error-actions {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+  margin-bottom: 64px;
+}
+.error-status {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  padding: 20px 24px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  border-left: 3px solid #ffb447;
+  max-width: 420px;
+}
+.status-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+}
+.status-indicator {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.status-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #ffb447;
+  animation: pulse 1.8s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(0.85); }
+}
+</style>
+{% endblock %}
