@@ -1,0 +1,65 @@
+{% extends "portal_base.html" %}
+{% block title %}Analytics Overview — Sunceray Patterson Consulting{% endblock %}
+
+{% block content %}
+{% set active = 'analytics' %}
+<div class="portal-layout">
+
+  {% include 'staff/_sidebar.html' with context %}
+
+  <div class="portal-content">
+    <div class="portal-header">
+      <h1>Analytics</h1>
+      <p>Last 30 days across all organizations.</p>
+    </div>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div style="padding:12px 16px; margin-bottom:16px; border-left:3px solid {% if category == 'danger' %}#ff4f4f{% elif category == 'success' %}var(--accent){% else %}#888{% endif %}; background:rgba(255,255,255,0.03); font-size:0.875rem;">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    {% if org_stats %}
+    <table class="data-table">
+      <thead>
+        <tr>
+          <th>Organization</th>
+          <th>Pageviews (30d)</th>
+          <th>Visitors (30d)</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for stat in org_stats %}
+        <tr>
+          <td>{{ stat.org.name }}</td>
+          <td style="font-family:var(--font-mono); font-size:0.9rem;">
+            {{ stat.pageviews | default(0) }}
+          </td>
+          <td style="font-family:var(--font-mono); font-size:0.9rem;">
+            {{ stat.visitors | default(0) }}
+          </td>
+          <td>
+            <a href="{{ url_for('analytics.org_detail', org_slug=stat.org.slug) }}"
+               style="color:var(--accent); font-size:0.8rem; font-family:var(--font-mono); letter-spacing:0.06em;">
+              View →
+            </a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+    <div style="padding:48px 0; border-top:1px solid var(--border); border-bottom:1px solid var(--border); text-align:center;">
+      <p style="color:#555; font-size:0.9rem; margin-bottom:8px;">No analytics data yet.</p>
+      <p style="color:#444; font-size:0.8rem;">Add a domain to an organization and install the tracking script to start collecting data.</p>
+    </div>
+    {% endif %}
+
+  </div>
+</div>
+{% endblock %}
